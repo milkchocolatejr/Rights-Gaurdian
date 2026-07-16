@@ -108,8 +108,9 @@ body.listening-page {
   filter: brightness(1.15);
 }
 
-/* Badge dot on the button's top-right */
+/* Badge dot on the button's top-right — hidden until first notification */
 .notif-alert-badge {
+  display: none;
   position: absolute;
   top: -4px;
   right: -4px;
