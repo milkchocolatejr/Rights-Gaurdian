@@ -90,13 +90,15 @@ function addToList(blob, filename) {
     recordingsList.prepend(li);
 }
 
-recBtn.addEventListener('click', () => {
-    if (recording) stopRecording();
-    else startRecording();
-});
+if (recBtn) {
+    recBtn.addEventListener('click', () => {
+        if (recording) stopRecording();
+        else startRecording();
+    });
+}
 
-saveBtn.addEventListener('click', saveRecording);
-discardBtn.addEventListener('click', discardRecording);
+if (saveBtn) saveBtn.addEventListener('click', saveRecording);
+if (discardBtn) discardBtn.addEventListener('click', discardRecording);
 
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js');
