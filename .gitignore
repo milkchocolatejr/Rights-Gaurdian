@@ -1,1 +1,11 @@
 /.idea/
+
+# local secrets — never commit
+.env
+/js/config.js
+
+# leftovers from the server-based branch (wire-record-button)
+/node_modules/
+/recordings/
+/transcripts/
+/server/
