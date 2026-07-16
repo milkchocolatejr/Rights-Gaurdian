@@ -14,7 +14,12 @@ class RelevantEvent {
 function toggleAnimation() {
   var el = document.getElementById('listening-breathing');
   if (el) {
-    el.classList.toggle('paused');
+    var wasPaused = el.classList.toggle('paused');
+    if (wasPaused) {
+      if (typeof stopRecording === 'function') stopRecording();
+    } else {
+      if (typeof startRecording === 'function') startRecording();
+    }
   }
 }
 
