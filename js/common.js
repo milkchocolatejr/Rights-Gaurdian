@@ -1,33 +1,3 @@
-const recBtn   = document.getElementById('recBtn');
-const statusEl = document.getElementById('status');
-const timerEl  = document.getElementById('timer');
-const subtitle = document.getElementById('subtitle');
-const recMeta  = document.getElementById('recMeta');
-
-const IDLE_TEXT = 'Click to begin defending your rights';
-const REC_TEXT  = 'Recording in progress — click to stop';
-
-function setRecordingUI(isRecording) {
-  recBtn.classList.toggle('is-recording', isRecording);
-  recMeta.classList.toggle('active', isRecording);
-  recMeta.setAttribute('aria-hidden', String(!isRecording));
-  recBtn.setAttribute('aria-label', isRecording ? 'Click to stop recording' : 'Click to begin recording');
-  subtitle.textContent = isRecording ? REC_TEXT : IDLE_TEXT;
-  statusEl.textContent = isRecording ? 'Recording' : 'Ready';
-}
-
-if (recBtn) {
-  recBtn.addEventListener('click', async () => {
-    if (recording) {
-      stopRecording();
-      setRecordingUI(false);
-    } else {
-      await startRecording();
-      setRecordingUI(recording); // stays false if the mic was denied
-    }
-  });
-}
-
 /* Real-time voice data (from recording.js's Deepgram stream) → console */
 document.addEventListener('rg-transcript', (e) => {
   const msg = e.detail;
@@ -50,3 +20,7 @@ document.addEventListener('rg-transcript', (e) => {
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js');
 }
+
+document.getElementById('recBtn').addEventListener("click", function() {
+    window.location.href = window.location.href.replace("index.html", "listening.html");
+});
