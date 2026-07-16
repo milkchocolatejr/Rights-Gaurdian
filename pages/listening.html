@@ -42,9 +42,14 @@
       <div id="listening-main" class="listening-main">
 
         <!-- ===== Breathing Circles ===== -->
-        <div id="listening-breathing" class="listening-breathing">
-          <div id="circle-outer" class="circle-outer"></div>
-          <div id="circle-inner" class="circle-inner"></div>
+        <div class="listening-breathing-row">
+          <div id="listening-breathing" class="listening-breathing">
+            <div id="circle-outer" class="circle-outer"></div>
+            <div id="circle-inner" class="circle-inner"></div>
+          </div>
+          <button id="notif-alert-btn" class="btn notif-alert-btn" type="button">
+            <span class="notif-alert-badge"></span>
+          </button>
         </div>
 
         <!-- ===== Sections (stacked vertically) ===== -->
@@ -70,22 +75,6 @@
 
       <!-- ===== Notifications Panel (side panel on desktop, below on mobile) ===== -->
       <aside id="notification-panel" class="listening-notifications">
-        <div id="notification-1" class="notification-item">
-          <h3 class="notification-title">Motion Detected</h3>
-          <p class="notification-text">Front entrance — 2m ago</p>
-        </div>
-        <div id="notification-2" class="notification-item">
-          <h3 class="notification-title">Audio Alert</h3>
-          <p class="notification-text">Glass break detected — 5m ago</p>
-        </div>
-        <div id="notification-3" class="notification-item">
-          <h3 class="notification-title">System Status</h3>
-          <p class="notification-text">All sensors online</p>
-        </div>
-        <div id="notification-4" class="notification-item">
-          <h3 class="notification-title">Recording Saved</h3>
-          <p class="notification-text">2026-07-17_14-30-22.wav</p>
-        </div>
       </aside>
 
     </div>

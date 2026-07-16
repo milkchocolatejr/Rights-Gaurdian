@@ -13,6 +13,8 @@
   --bg-transcript: transparent;
   --bg-notifications: transparent;
   --bg-notification-item: transparent;
+  --bg-notif-btn: #e0e0e0;
+  --bg-notif-badge: #ef5350;
   --section-border: 1px solid #ddd;
 }
 
@@ -28,6 +30,8 @@ body.debug {
   --bg-transcript: #ef5350;
   --bg-notifications: #b39ddb;
   --bg-notification-item: #d1c4e9;
+  --bg-notif-btn: #6a1b9a;
+  --bg-notif-badge: #ff1744;
   --section-border: 2px dashed #333;
 }
 
@@ -46,14 +50,21 @@ body.listening-page {
   gap: 2rem;
 }
 
+.listening-breathing-row {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2.5rem;
+}
+
 .listening-breathing {
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
+  flex-shrink: 0;
   width: 180px;
   height: 180px;
-  margin: 0 auto 2.5rem;
   background: var(--bg-breathing);
   border-radius: 50%;
 }
@@ -73,6 +84,40 @@ body.listening-page {
   border: 3px solid var(--circle-border-inner);
   animation: breathe 3s ease-in-out infinite;
   animation-delay: -1s;
+}
+
+/* Notification alert button */
+.notif-alert-btn {
+  position: absolute;
+  top: 0;
+  left: calc(50% + 100px);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-notif-btn);
+  border: 2px solid #fff;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.notif-alert-btn:hover {
+  filter: brightness(1.15);
+}
+
+/* Badge dot on the button's top-right */
+.notif-alert-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--bg-notif-badge);
+  border: 2px solid #fff;
 }
 
 .listening-breathing.paused .circle-outer,
