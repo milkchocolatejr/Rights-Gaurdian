@@ -1,0 +1,13 @@
+{
+  "name": "rights-guardian",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Rights Guardian — audio witness PWA with local save + real-time diarized transcription",
+  "scripts": {
+    "start": "node server/server.js"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}

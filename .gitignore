@@ -1,1 +1,12 @@
 /.idea/
+
+# saved user audio + transcripts (generated at runtime)
+/recordings/
+/transcripts/
+
+# backend
+/node_modules/
+.env
+
+# generated test audio
+/server/fixtures/

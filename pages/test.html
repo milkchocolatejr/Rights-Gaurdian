@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RG Dev Harness</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #0d1422; color: #ece4d3; max-width: 760px; margin: 2rem auto; padding: 0 1rem; }
+    h1 { font-size: 1.2rem; letter-spacing: .08em; text-transform: uppercase; color: #c8a35c; }
+    button { background: #c8a35c; color: #090e17; border: 0; border-radius: .4rem; padding: .55rem 1.1rem; font-weight: 600; cursor: pointer; margin-right: .5rem; }
+    button:disabled { opacity: .4; cursor: default; }
+    #recToggle.recording { background: #d75c4d; color: #fff; }
+    .row { margin: 1rem 0; display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; }
+    #timer { font-family: ui-monospace, monospace; font-size: 1.1rem; }
+    #status { color: #8a94a8; font-size: .9rem; }
+    #transcript { background: #090e17; border: 1px solid #26324a; border-radius: .6rem; padding: 1rem; min-height: 200px; line-height: 1.7; font-size: .95rem; }
+    #transcript .interim { color: #8a94a8; font-style: italic; }
+    #transcript .files { color: #c8a35c; font-size: .8rem; margin-top: .8rem; }
+    #transcript .err { color: #d75c4d; }
+    .spk { font-weight: 700; }
+    .spk-1 { color: #7fb4ff; } .spk-2 { color: #ffb37f; } .spk-3 { color: #8fe38f; }
+    .spk-4 { color: #e39fe3; } .spk-5 { color: #ffe07f; } .spk-6 { color: #7fe3d8; }
+    .t { color: #55617a; font-family: ui-monospace, monospace; font-size: .8rem; margin-right: .4rem; }
+  </style>
+</head>
+<body>
+  <h1>Rights Guardian — dev harness</h1>
+
+  <div class="row">
+    <button id="recToggle">Start recording</button>
+    <span id="timer">00:00</span>
+    <span id="status">Ready</span>
+  </div>
+
+  <div class="row">
+    <button id="saveBtn" disabled>Save to server</button>
+    <button id="dlBtn" disabled>Download</button>
+    <span id="saveInfo"></span>
+  </div>
+
+  <h1>Live transcript</h1>
+  <div id="transcript"><span class="interim">Waiting for a recording…</span></div>
+
+  <script src="../js/recording.js"></script>
+  <script>
+    /* Globals recording.js expects from its host page */
+    const timerEl  = document.getElementById('timer');
+    const statusEl = document.getElementById('status');
+    const recToggle = document.getElementById('recToggle');
+    const saveBtn = document.getElementById('saveBtn');
+    const dlBtn = document.getElementById('dlBtn');
+    const saveInfo = document.getElementById('saveInfo');
+    const transcript = document.getElementById('transcript');
+    let interimEl = null;
+
+    function setRecordingUI(isRecording) {
+      recToggle.textContent = isRecording ? 'Stop recording' : 'Start recording';
+      recToggle.classList.toggle('recording', isRecording);
+      statusEl.textContent = isRecording ? 'Recording' : 'Ready';
+      saveBtn.disabled = dlBtn.disabled = isRecording;
+    }
+
+    recToggle.addEventListener('click', async () => {
+      if (recording) {
+        stopRecording();
+        setRecordingUI(false);
+        saveBtn.disabled = dlBtn.disabled = false;
+      } else {
+        transcript.innerHTML = '';
+        await startRecording();
+        if (recording) setRecordingUI(true);
+      }
+    });
+
+    saveBtn.addEventListener('click', async () => {
+      try {
+        const info = await saveLastRecording();
+        saveInfo.textContent = info ? `saved → ${info.file}` : 'nothing to save';
+      } catch (e) { saveInfo.textContent = e.message; }
+    });
+
+    dlBtn.addEventListener('click', () => {
+      if (!downloadLastRecording()) saveInfo.textContent = 'nothing to download';
+    });
+
+    const fmt = s => `${String(Math.floor(s/60)).padStart(2,'0')}:${String(Math.floor(s%60)).padStart(2,'0')}`;
+
+    document.addEventListener('rg-transcript', (e) => {
+      const msg = e.detail;
+      if (msg.type === 'transcript' && !msg.final) {
+        if (!interimEl) { interimEl = document.createElement('div'); interimEl.className = 'interim'; transcript.appendChild(interimEl); }
+        interimEl.textContent = msg.text;
+      } else if (msg.type === 'transcript' && msg.final) {
+        if (interimEl) { interimEl.remove(); interimEl = null; }
+        for (const line of msg.lines) {
+          const div = document.createElement('div');
+          const spkClass = 'spk-' + (((line.speaker - 1) % 6) + 1);
+          div.innerHTML = `<span class="t">[${fmt(line.start)}]</span><span class="spk ${spkClass}">Speaker ${line.speaker}:</span> `;
+          div.appendChild(document.createTextNode(line.text));
+          transcript.appendChild(div);
+        }
+      } else if (msg.type === 'session_closed') {
+        if (interimEl) { interimEl.remove(); interimEl = null; }
+        const div = document.createElement('div');
+        div.className = 'files';
+        div.textContent = `Transcript written: ${msg.txt} · ${msg.jsonl}`;
+        transcript.appendChild(div);
+      } else if (msg.type === 'error') {
+        const div = document.createElement('div');
+        div.className = 'err';
+        div.textContent = msg.message;
+        transcript.appendChild(div);
+      }
+      transcript.scrollTop = transcript.scrollHeight;
+    });
+  </script>
+</body>
+</html>
