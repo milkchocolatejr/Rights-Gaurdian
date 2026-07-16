@@ -16,15 +16,17 @@ function setRecordingUI(isRecording) {
   statusEl.textContent = isRecording ? 'Recording' : 'Ready';
 }
 
-recBtn.addEventListener('click', async () => {
-  if (recording) {
-    stopRecording();
-    setRecordingUI(false);
-  } else {
-    await startRecording();
-    setRecordingUI(recording); // stays false if the mic was denied
-  }
-});
+if (recBtn) {
+  recBtn.addEventListener('click', async () => {
+    if (recording) {
+      stopRecording();
+      setRecordingUI(false);
+    } else {
+      await startRecording();
+      setRecordingUI(recording); // stays false if the mic was denied
+    }
+  });
+}
 
 /* Real-time voice data (from recording.js's Deepgram stream) → console */
 document.addEventListener('rg-transcript', (e) => {

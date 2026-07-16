@@ -1,5 +1,4 @@
 /.idea/
-
 # local secrets — never commit
 .env
 /js/config.js
@@ -9,3 +8,5 @@
 /recordings/
 /transcripts/
 /server/
+
+.omo/**
