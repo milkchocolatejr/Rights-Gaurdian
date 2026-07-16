@@ -1,0 +1,109 @@
+/* ============================================================
+   Rights Guardian — "Brass & Ink" theme  (DEFAULT)
+
+   This is the default theme for the app, mirroring the original
+   index-page identity (css/styles.css). Its tokens sit on :root,
+   so the page renders correctly with no body class and before
+   config.js runs.
+
+   config.js will handle theme selection later. It can either leave
+   the default alone, or add `theme-brass-ink` to <body> explicitly
+   as a named handle. Other themes (e.g. debug) override via their
+   own body class.
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&family=Hanken+Grotesk:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+
+/* ---------- palette + semantic mapping (default, on :root) ---------- */
+:root,
+body.theme-brass-ink {
+  /* source palette (mirrors styles.css) */
+  --ink-900: #090e17;
+  --ink-800: #0d1422;
+  --ink-700: #121b2d;
+  --panel:   #131d31;
+  --line:    #26324a;
+
+  --brass:        #c8a35c;
+  --brass-bright: #e8ca84;
+  --brass-dim:    rgba(200, 163, 92, 0.16);
+
+  --parchment: #ece4d3;
+  --muted:     #8a94a8;
+
+  --ember:      #d75c4d;
+  --ember-soft: rgba(215, 92, 77, 0.28);
+
+  --font-display: 'Libre Caslon Display', Georgia, serif;
+  --font-ui: 'Hanken Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'DM Mono', ui-monospace, monospace;
+
+  /* map palette onto the listening page's semantic slots */
+  --bg-page:              var(--ink-900);
+  --bg-breathing:         transparent;
+  --circle-bg-outer:      var(--brass-dim);
+  --circle-border-outer:  rgba(200, 163, 92, 0.55);
+  --circle-bg-inner:      rgba(200, 163, 92, 0.10);
+  --circle-border-inner:  var(--brass);
+  --bg-status-text:       transparent;
+  --bg-waveform:          rgba(19, 29, 49, 0.45);
+  --bg-transcript:        rgba(19, 29, 49, 0.45);
+  --bg-notifications:     transparent;
+  --bg-notification-item: var(--panel);
+  --bg-notif-btn:         var(--brass);
+  --bg-notif-badge:       var(--ember);
+  --section-border:       1px solid var(--line);
+}
+
+/* ---------- identity applied to the page (default look) ----------
+   These target the base selectors rather than a theme class, so the
+   brass identity is the default. A future alternate theme would
+   override the backdrop / fonts / emblem it doesn't want. */
+body.listening-page {
+  background-color: var(--ink-900);
+  background-image:
+    radial-gradient(115% 78% at 50% 34%, rgba(200, 163, 92, 0.10) 0%, rgba(200, 163, 92, 0) 55%),
+    radial-gradient(140% 120% at 50% 120%, rgba(9, 14, 23, 0) 30%, rgba(4, 7, 12, 0.9) 100%),
+    linear-gradient(180deg, var(--ink-800) 0%, var(--ink-900) 100%);
+  background-attachment: fixed;
+  color: var(--parchment);
+  font-family: var(--font-ui);
+}
+
+.listening-status-text h2 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--parchment);
+}
+#timer {
+  font-family: var(--font-mono);
+  color: var(--brass-bright);
+}
+.listening-status-text .text-muted { color: var(--muted); }
+.notification-title { color: var(--brass-bright); }
+.notification-text  { color: var(--parchment); opacity: .8; }
+
+/* ---------- the "icon": guardian emblem inside the breathing medallion ----------
+   The two breathing circles become the ring/glow; the emblem sits static
+   on top, echoing the index medallion. Delete this block for bare circles.
+   Background images fail silently, so a wrong path shows nothing. */
+.listening-breathing::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 82px;
+  height: 82px;
+  background: url('../icons/guardian.png') center / contain no-repeat;
+  filter: drop-shadow(0 3px 10px rgba(0, 0, 0, .5));
+  pointer-events: none;
+  z-index: 2;
+}
+.listening-breathing .circle-outer {
+  box-shadow: 0 0 34px rgba(200, 163, 92, 0.20), inset 0 0 22px rgba(200, 163, 92, 0.10);
+}
+.listening-breathing .circle-inner {
+  box-shadow: 0 0 18px rgba(200, 163, 92, 0.26);
+}

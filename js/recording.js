@@ -23,6 +23,7 @@ let mediaRecorder = null;
 let recording = false;
 let timerInterval = null;
 let seconds = 0;
+let timerEL = null;
 
 /* Captured audio (rebuilt each recording) */
 const CHUNK_MS = 250;            // small timeslice keeps live transcription snappy
@@ -75,8 +76,8 @@ async function startRecording() {
 
     alert('Recording started');
   } catch (err) {
-    setRecordingUI(false);
-    statusEl.textContent = `Microphone unavailable: ${err.message}`;
+    recording = false;
+    console.error(err)
   }
 }
 

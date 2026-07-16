@@ -1,39 +1,9 @@
 /* ===== Rights-Gaurdian: Listening Page ===== */
-/* Color scheme via CSS custom properties — duplicate of inline styles in listening.html */
-
-:root {
-  --bg-page: #f5f5f5;
-  --bg-breathing: transparent;
-  --circle-bg-outer: rgba(0, 0, 0, 0.04);
-  --circle-border-outer: #ccc;
-  --circle-bg-inner: rgba(0, 0, 0, 0.08);
-  --circle-border-inner: #aaa;
-  --bg-status-text: transparent;
-  --bg-waveform: transparent;
-  --bg-transcript: transparent;
-  --bg-notifications: transparent;
-  --bg-notification-item: transparent;
-  --bg-notif-btn: #e0e0e0;
-  --bg-notif-badge: #ef5350;
-  --section-border: 1px solid #ddd;
-}
-
-body.debug {
-  --bg-page: #ffd43b;
-  --bg-breathing: #a1887f;
-  --circle-bg-outer: rgba(135, 206, 235, 0.5);
-  --circle-border-outer: #4fc3f7;
-  --circle-bg-inner: rgba(135, 206, 235, 0.65);
-  --circle-border-inner: #4fc3f7;
-  --bg-status-text: #ce93d8;
-  --bg-waveform: #f48fb1;
-  --bg-transcript: #ef5350;
-  --bg-notifications: #b39ddb;
-  --bg-notification-item: #d1c4e9;
-  --bg-notif-btn: #6a1b9a;
-  --bg-notif-badge: #ff1744;
-  --section-border: 2px dashed #333;
-}
+/* Structure only — no theme values live here. Themes supply the
+   CSS variables this file consumes:
+     - css/theme-brass-ink.css   ->  default (on :root)
+     - css/theme-debug.css       ->  body.debug  (dev only)
+   Load theme-brass-ink.css after this file, and theme-debug.css last. */
 
 body.listening-page {
   background-color: var(--bg-page);
@@ -84,6 +54,16 @@ body.listening-page {
   border: 3px solid var(--circle-border-inner);
   animation: breathe 3s ease-in-out infinite;
   animation-delay: -1s;
+}
+
+.listening-status-text h2,
+.listening-status-text #timer {
+  display: inline-block;
+  margin-bottom: 0;
+}
+
+.listening-status-text #timer:not(:empty) {
+  margin-left: 0.5rem;
 }
 
 /* Notification alert button */

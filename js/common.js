@@ -18,7 +18,7 @@ document.addEventListener('rg-transcript', (e) => {
 });
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js');
+  navigator.serviceWorker.register('./sw.js');
 }
 
 /* ===== Reusable modal component ===== */
