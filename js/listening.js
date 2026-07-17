@@ -11,7 +11,7 @@ class RelevantEvent {
   }
 }
 
-function toggleAnimation() {
+function toggleRecording() {
   var el = document.getElementById('listening-breathing');
   if (el) {
     var wasPaused = el.classList.toggle('paused');

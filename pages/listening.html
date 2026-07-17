@@ -23,9 +23,14 @@
   <script defer>
     document.addEventListener('DOMContentLoaded', () => {
       var breathing = document.getElementById('listening-breathing');
-      if (breathing) breathing.addEventListener('click', toggleAnimation);
+      if (breathing) breathing.addEventListener('click', toggleRecording);
 
-      timerEl = document.getElementById("timer")
+      timerEl = document.getElementById("timer");
+
+      /* Auto-start if setting is enabled */
+      if (typeof getOrUpdateSettings === 'function' && getOrUpdateSettings().autoStart) {
+        toggleRecording();
+      }
     });
   </script>
 
