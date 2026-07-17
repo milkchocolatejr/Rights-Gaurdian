@@ -1,26 +1,400 @@
 /* ============================================================
-   Rights Guardian — Debug theme  (dev only)
+   Rights Guardian — Debug / Dev theme
 
-   Overlay driven by the `debug` body class, toggled by the
-   #debug-toggle button in listening.html. Load this LAST so it
-   wins over whatever theme is active when debug is switched on.
+   PURPOSE
+   Every UI component on the page has a visible, identifiable
+   state. Sections are hue-coded so you instantly know which
+   CSS selector owns which visual area. State transitions
+   (paused ↔ recording, seen ↔ unseen, active ↔ idle) produce
+   obvious, dramatic visual changes.
 
-       <body class="listening-page debug">
+   ACTIVATION
+     <body class="listening-page debug">
+
+   Load this LAST so it overrides all theme variables regardless
+   of which theme is active underneath.
+
+   HUES PER SECTION
+     breathing circles  →  cyan   (#00bcd4)
+     status text        →  amber  (#ffa000)
+     waveform           →  blue   (#2196f3)
+     transcript         →  green  (#4caf50)
+     notifications      →  purple (#7c4dff)
+     notification items →  pink   (#e91e63)
+     bottom bar         →  slate  (#37474f)
+     modals             →  indigo (#3f51b5)
    ============================================================ */
 
+/* ============================================================
+   1. FULL PALETTE OVERRIDE
+   Every variable that brass-ink defines on :root is re-defined
+   here so nothing bleeds through from the default theme.
+   ============================================================ */
 body.debug {
-  --bg-page: #ffd43b;
-  --bg-breathing: #a1887f;
-  --circle-bg-outer: rgba(135, 206, 235, 0.5);
-  --circle-border-outer: #4fc3f7;
-  --circle-bg-inner: rgba(135, 206, 235, 0.65);
-  --circle-border-inner: #4fc3f7;
-  --bg-status-text: #ce93d8;
-  --bg-waveform: #f48fb1;
-  --bg-transcript: #ef5350;
-  --bg-notifications: #b39ddb;
-  --bg-notification-item: #d1c4e9;
-  --bg-notif-btn: #6a1b9a;
-  --bg-notif-badge: #ff1744;
-  --section-border: 2px dashed #333;
+  --ink-900: #0d0d1a;
+  --ink-800: #13132b;
+  --ink-700: #1a1a36;
+  --panel:   #1e1e3a;
+  --line:    #2a2a4a;
+
+  /* "brass" repurposed as cool neutral for chrome */
+  --brass:        #90a4ae;
+  --brass-bright: #cfd8dc;
+  --brass-dim:    rgba(144, 164, 174, 0.18);
+
+  --parchment: #e0e0e0;
+  --muted:     #78909c;
+
+  --ember:      #ff5252;
+  --ember-soft: rgba(255, 82, 82, 0.28);
+
+  --text-body: var(--parchment);
+
+  --font-display: 'Libre Caslon Display', Georgia, serif;
+  --font-ui: 'Hanken Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'DM Mono', ui-monospace, monospace;
+
+  /* ---------- page background ---------- */
+  --bg-page: #1a1a2e;
+  --bg-page-image: none;
+
+  /* ---------- section semantic vars (hue-coded) ---------- */
+  --bg-breathing:         rgba(0, 188, 212, 0.06);
+  --circle-bg-outer:      rgba(0, 188, 212, 0.20);
+  --circle-border-outer:  #00bcd4;
+  --circle-bg-inner:      rgba(0, 188, 212, 0.32);
+  --circle-border-inner:  #4dd0e1;
+
+  --bg-status-text:       rgba(255, 160, 0, 0.10);
+  --bg-waveform:          rgba(33, 150, 243, 0.08);
+  --bg-transcript:        rgba(76, 175, 80, 0.08);
+  --bg-notifications:     rgba(124, 77, 255, 0.06);
+  --bg-notification-item: rgba(233, 30, 99, 0.10);
+  --bg-notif-btn:         #7c4dff;
+  --bg-notif-badge:       #ff1744;
+  --section-border:       1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* ============================================================
+   2. PAGE BACKGROUND (override the gradient brass-ink uses)
+   ============================================================ */
+body.debug.listening-page {
+  background:
+    linear-gradient(180deg, #1a1a2e 0%, #0d0d1a 100%);
+}
+
+/* ============================================================
+   3. BREATHING CIRCLES — state: PAUSED vs RECORDING
+   Paused = desaturated, stopped animation, dashed border
+   Recording = bright cyan, animated
+   ============================================================ */
+body.debug .listening-breathing {
+  background: rgba(0, 188, 212, 0.06);
+  outline: 1px dashed rgba(0, 188, 212, 0.12);
+  outline-offset: 4px;
+  transition: outline-color 0.3s, background 0.3s;
+}
+
+/* RECORDING state → animated, bright */
+body.debug .listening-breathing:not(.paused) {
+  background: rgba(0, 188, 212, 0.10);
+  outline-color: #00bcd4;
+  outline-style: solid;
+}
+
+body.debug .listening-breathing .circle-outer {
+  background: rgba(0, 188, 212, 0.20);
+  border: 3px solid #00bcd4;
+  box-shadow: 0 0 12px rgba(0, 188, 212, 0.15);
+}
+
+body.debug .listening-breathing .circle-inner {
+  background: rgba(0, 188, 212, 0.32);
+  border: 3px solid #4dd0e1;
+  box-shadow: 0 0 8px rgba(0, 188, 212, 0.20);
+}
+
+/* Suppress the brand emblem overlay — debug theme shows raw circles */
+body.debug .listening-breathing::after {
+  content: none !important;
+}
+
+/* State label below breathing circles */
+body.debug .listening-breathing::before {
+  content: attr(data-state);
+  position: absolute;
+  bottom: -22px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.08em;
+  color: #00bcd4;
+  opacity: 0.4;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* PAUSED state → desaturated, stopped, dashed */
+body.debug .listening-breathing.paused .circle-outer {
+  background: rgba(0, 188, 212, 0.08);
+  border-color: #546e7a;
+  box-shadow: none;
+}
+
+body.debug .listening-breathing.paused .circle-inner {
+  background: rgba(0, 188, 212, 0.14);
+  border-color: #607d8b;
+  box-shadow: none;
+}
+
+/* ============================================================
+   4. SECTION LABELS — each section overlays its CSS class name
+   for instant layout debugging.  Only shown in debug mode.
+   Positioned absolutely so they don't disrupt content flow.
+   ============================================================ */
+body.debug .listening-status-text,
+body.debug .listening-waveform,
+body.debug .listening-transcript,
+body.debug .listening-notifications,
+body.debug .notification-item {
+  position: relative;
+}
+
+body.debug .listening-status-text::before {
+  content: ".listening-status-text";
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.08em;
+  color: #ffa000;
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+body.debug .listening-waveform::before {
+  content: ".listening-waveform";
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.08em;
+  color: #2196f3;
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+body.debug .listening-transcript::before {
+  content: ".listening-transcript";
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.08em;
+  color: #4caf50;
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+body.debug .listening-notifications::before {
+  content: ".listening-notifications  (" attr(data-count) " unread)";
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.08em;
+  color: #7c4dff;
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+body.debug .notification-item::before {
+  content: ".notification-item  [seen=" attr(data-seen) "]";
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  color: #e91e63;
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* ============================================================
+   5. STATE INDICATORS — badge dots overlay each section to show
+   active/inactive state at a glance.
+   ============================================================ */
+
+/* ------ Status text section ------ */
+body.debug .listening-status-text {
+  border-left: 3px solid #ffa000;
+  transition: border-left-color 0.3s, background 0.3s, border-color 0.3s;
+}
+
+/* Timer running → recording active */
+body.debug .listening-status-text:has(#timer:not(:empty)) {
+  border-left-color: #ffc107;
+  background: rgba(255, 160, 0, 0.06);
+}
+
+body.debug .listening-status-text:has(#timer:not(:empty)) .listening-status-text,
+body.debug .listening-status-text #timer:not(:empty) + .listening-status-text::after {
+  /* nop — placeholder for future state indicator */
+}
+
+/* Timer has value → recording active */
+body.debug #timer:not(:empty) {
+  color: #ff5252;
+}
+
+/* RECORDING badge appears next to the timer when recording */
+body.debug .listening-status-text:has(#timer:not(:empty)) h2::after {
+  content: "● RECORDING";
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  font-weight: 600;
+  color: #ff5252;
+  letter-spacing: 0.08em;
+  margin-left: 0.5rem;
+  opacity: 0.7;
+  animation: debug-blink 1s step-end infinite;
+}
+
+/* ------ Waveform section ------ */
+body.debug .listening-waveform {
+  border-left: 3px solid #2196f3;
+  transition: border-left-color 0.3s;
+}
+
+body.debug .listening-waveform:not(:empty) {
+  border-left-color: #64b5f6;
+  background: rgba(33, 150, 243, 0.04);
+}
+
+/* ------ Transcript section ------ */
+body.debug .listening-transcript {
+  border-left: 3px solid #4caf50;
+  transition: border-left-color 0.3s;
+}
+
+body.debug .listening-transcript p:not(:empty) {
+  border-left: 2px solid rgba(76, 175, 80, 0.3);
+  padding-left: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+/* ------ Notifications panel ------ */
+body.debug .listening-notifications {
+  border-left: 3px solid #7c4dff;
+  min-height: 60px;
+}
+
+/* Badge visible → unread notifications exist */
+body.debug .notif-alert-badge[style*="block"],
+body.debug .notif-alert-badge:not([style*="none"]) {
+  background: #ff1744;
+  box-shadow: 0 0 8px rgba(255, 23, 68, 0.6);
+}
+
+/* ============================================================
+   6. NOTIFICATION ITEMS — seen vs unseen state
+   Unseen = bright pink border + background
+   Seen   = desaturated, muted
+   ============================================================ */
+body.debug .notification-item:not([data-seen="true"]),
+body.debug .notification-item:not(.seen) {
+  border: 1px solid rgba(233, 30, 99, 0.35);
+  background: rgba(233, 30, 99, 0.12);
+}
+
+body.debug .notification-item[data-seen="true"],
+body.debug .notification-item.seen {
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(233, 30, 99, 0.04);
+  opacity: 0.55;
+}
+
+body.debug .notification-item[data-seen="true"] .notification-title::after,
+body.debug .notification-item.seen .notification-title::after {
+  content: " ✓ SEEN";
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  color: #4caf50;
+  margin-left: 0.35rem;
+}
+
+/* ============================================================
+   7. BOTTOM BAR (shared chrome)
+   ============================================================ */
+body.debug .app-bottom {
+  border-top: 1px solid rgba(144, 164, 174, 0.20);
+  background: rgba(55, 71, 79, 0.60);
+}
+
+body.debug .bar-btn {
+  position: relative;
+}
+
+body.debug .bar-btn::after {
+  content: ".bar-btn";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.45rem;
+  color: rgba(144, 164, 174, 0.35);
+  letter-spacing: 0.05em;
+  pointer-events: none;
+}
+
+/* ============================================================
+   8. MODALS (settings, learn, notices)
+   ============================================================ */
+body.debug .modal-content.rg-modal {
+  border: 1px solid rgba(63, 81, 181, 0.35);
+  box-shadow: 0 0 24px rgba(63, 81, 181, 0.12);
+}
+
+body.debug .modal-content.rg-modal::before {
+  content: ".rg-modal";
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  color: #3f51b5;
+  opacity: 0.4;
+  padding: 0.25rem 0.75rem 0;
+  letter-spacing: 0.05em;
+}
+
+body.debug .form-select {
+  background: var(--ink-700);
+  border-color: var(--line);
+  color: var(--parchment);
+}
+
+/* ============================================================
+   9. TIMER — pulse when active
+   ============================================================ */
+body.debug #timer:not(:empty) {
+  animation: debug-pulse 1.5s ease-in-out infinite;
+}
+
+/* ============================================================
+   10. KEYFRAMES
+   ============================================================ */
+@keyframes debug-blink {
+  50% { opacity: 0.2; }
+}
+
+@keyframes debug-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
 }
