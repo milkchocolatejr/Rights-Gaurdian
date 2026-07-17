@@ -388,7 +388,162 @@ body.debug #timer:not(:empty) {
 }
 
 /* ============================================================
-   10. KEYFRAMES
+   10. INDEX / HOME PAGE  (body.rg-body)
+   Every component on the index page gets the same hue-coded
+   treatment with state-visible labels and borders.
+
+   HUES PER SECTION
+     page background      →  dark indigo   (#1a1a2e)
+     title / .app-top     →  teal          (#00897b)
+     guardian medallion   →  cyan          (#00acc1)
+     subtitle             →  amber         (#ff8f00)
+     recording meta       →  ember         (#ff5252)
+   ============================================================ */
+
+/* ----- 10a. Page background ----- */
+body.debug.rg-body {
+  background:
+    linear-gradient(180deg, #1a1a2e 0%, #0d0d1a 100%);
+}
+
+/* ----- 10b. Title section (.app-top / .app-title / .app-eyebrow) ----- */
+body.debug .app-top {
+  position: relative;
+  padding-top: 0.5rem;
+}
+
+body.debug .app-top::before {
+  content: ".app-top";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.08em;
+  color: #00897b;
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+body.debug .app-title {
+  color: #80cbc4;
+  letter-spacing: 0.12em;
+}
+
+body.debug .app-title .amp {
+  color: #4db6ac;
+}
+
+body.debug .app-eyebrow {
+  color: #4db6ac;
+  opacity: 1;
+}
+
+/* ----- 10c. Guardian medallion (.guardian / .guardian-ring / .guardian-glow / .guardian-img) ----- */
+body.debug .guardian {
+  position: relative;
+}
+
+/* Section label at top of guardian */
+body.debug .guardian::after {
+  content: ".guardian";
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.08em;
+  color: #00acc1;
+  opacity: 0.4;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Inner disc (guardian::before) — debug tint */
+body.debug .guardian::before {
+  background: radial-gradient(circle at 50% 38%, #1a2a3a 0%, #0e1a2a 78%);
+  border: 1px solid rgba(0, 172, 193, 0.35);
+  box-shadow: inset 0 1px 14px rgba(0, 0, 0, 0.55), 0 6px 30px rgba(0, 0, 0, 0.45);
+}
+
+body.debug .guardian-ring {
+  border-color: rgba(0, 172, 193, 0.45);
+}
+
+body.debug .guardian-glow {
+  background: radial-gradient(circle, rgba(0, 172, 193, 0.30) 0%, rgba(0, 172, 193, 0) 68%);
+}
+
+body.debug .guardian-img {
+  filter: drop-shadow(0 4px 12px rgba(0, 172, 193, 0.25));
+}
+
+/* ----- 10d. Guardian recording state ----- */
+body.debug .guardian.is-recording .guardian-ring {
+  border-color: #ff5252;
+  border-style: solid;
+  box-shadow: 0 0 12px rgba(255, 82, 82, 0.25);
+}
+
+body.debug .guardian.is-recording .guardian-glow {
+  background: radial-gradient(circle, rgba(255, 82, 82, 0.40) 0%, rgba(255, 82, 82, 0) 68%);
+}
+
+body.debug .guardian.is-recording .guardian-img {
+  filter: drop-shadow(0 0 12px rgba(255, 82, 82, 0.45));
+}
+
+body.debug .guardian.is-recording::after {
+  content: ".guardian  ● RECORDING";
+  color: #ff5252;
+  opacity: 0.7;
+  animation: debug-blink 1s step-end infinite;
+}
+
+/* ----- 10e. Subtitle ----- */
+body.debug .subtitle {
+  position: relative;
+  color: #ffcc80;
+  margin-top: clamp(1.6rem, 4vh, 2.6rem);
+}
+
+body.debug .subtitle::before {
+  content: ".subtitle";
+  position: absolute;
+  top: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.08em;
+  color: #ff8f00;
+  opacity: 0.35;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* ----- 10f. Recording meta (.rec-meta / .rec-dot / .rec-timer) ----- */
+body.debug .rec-meta {
+  border: 1px dashed rgba(255, 82, 82, 0.25);
+  border-radius: 4px;
+  padding: 0.15rem 0.5rem;
+}
+
+body.debug .rec-meta.active {
+  border-style: solid;
+  border-color: rgba(255, 82, 82, 0.50);
+  background: rgba(255, 82, 82, 0.06);
+}
+
+body.debug .rec-timer {
+  color: #ff8a80;
+}
+
+/* ============================================================
+   11. KEYFRAMES
    ============================================================ */
 @keyframes debug-blink {
   50% { opacity: 0.2; }
