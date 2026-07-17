@@ -19,6 +19,19 @@ document.addEventListener('rg-transcript', (e) => {
 
 /* Service worker registration lives in js/config.js — see README. */
 
+/* ===== Theme registry: value → display name ===== */
+const THEMES = {
+  'theme-brass-ink': 'Brass &amp; Ink',
+  'theme-dark': 'Dark',
+  'theme-light': 'Light',
+  'theme-blood-iron': 'Blood &amp; Iron',
+  'theme-land-water': 'Land &amp; Water',
+  'theme-pretty-pink': 'Pretty Pink',
+  'theme-black-blue': 'Black &amp; Blue',
+  'theme-flaming-hot': 'Flaming Hot',
+  'debug': 'Debug',
+};
+
 /* ===== Reusable modal component ===== */
 function createModal({ id, title, body, closeLabel = 'Close', scrollable = false }) {
   const scroll = scrollable ? ' modal-dialog-scrollable' : '';
@@ -86,12 +99,9 @@ const SETTINGS_MODAL = () => {
       + '<div class="mb-2">'
       +   '<label class="form-label" for="setTheme" style="color:var(--muted);font-size:.85rem">Theme</label>'
       +   `<select class="form-select" id="setTheme" style="background:var(--ink-700);border-color:var(--line);color:var(--parchment)">`
-      +     `<option value="theme-brass-ink" ${s.theme === 'theme-brass-ink' ? 'selected' : ''}>Brass &amp; Ink</option>`
-      +     `<option value="theme-dark" ${s.theme === 'theme-dark' ? 'selected' : ''}>Dark</option>`
-      +     `<option value="theme-light" ${s.theme === 'theme-light' ? 'selected' : ''}>Light</option>`
-      +     `<option value="theme-blood-iron" ${s.theme === 'theme-blood-iron' ? 'selected' : ''}>Blood &amp; Iron</option>`
-      +     `<option value="theme-land-water" ${s.theme === 'theme-land-water' ? 'selected' : ''}>Land &amp; Water</option>`
-      +     `<option value="debug" ${s.theme === 'debug' ? 'selected' : ''}>Debug</option>`
+      +     Object.keys(THEMES).map(function(v) {
+      +       return '<option value="' + v + '" ' + (s.theme === v ? 'selected' : '') + '>' + THEMES[v] + '</option>';
+      +     }).join('')
       +   '</select>'
       + '</div>'
       + '<div class="mb-2">'
@@ -235,7 +245,7 @@ document.addEventListener('change', (e) => {
 
   if (e.target.id === 'setTheme') {
     /* Swap body class: remove old theme, add new one */
-    document.body.classList.remove('theme-brass-ink', 'debug', 'theme-dark', 'theme-light', 'theme-blood-iron', 'theme-land-water');
+    document.body.classList.remove.apply(document.body.classList, Object.keys(THEMES));
     document.body.classList.add(e.target.value);
     getOrUpdateSettings(s.autoStart, s.keepDataLocal, s.hapticFeedback, e.target.value);
   }

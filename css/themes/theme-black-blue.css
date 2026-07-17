@@ -1,0 +1,97 @@
+/* ============================================================
+   Rights Guardian — "Black & Blue" theme  (high contrast)
+
+   Maximum-contrast dark theme. True-black backgrounds, electric
+   cobalt blue accents, crisp white text. Clean and severe.
+
+   Activates via:  <body class="theme-black-blue">
+   ============================================================ */
+
+body.theme-black-blue {
+  --ink-900: #000000;
+  --ink-800: #080810;
+  --ink-700: #101020;
+  --panel:   #0c0c1c;
+  --line:    #1e1e3a;
+
+  --brass:        #3d7bff;
+  --brass-bright: #6b9fff;
+  --brass-dim:    rgba(61, 123, 255, 0.15);
+
+  --parchment: #f0f4ff;
+  --muted:     #7a8aaa;
+
+  --ember:      #ff3d3d;
+  --ember-soft: rgba(255, 61, 61, 0.22);
+
+  --text-body: var(--parchment);
+  --bg-page: var(--ink-900);
+  --bg-page-image: none;
+
+  --bg-breathing:         rgba(61, 123, 255, 0.06);
+  --circle-bg-outer:      rgba(61, 123, 255, 0.16);
+  --circle-border-outer:  rgba(61, 123, 255, 0.45);
+  --circle-bg-inner:      rgba(61, 123, 255, 0.24);
+  --circle-border-inner:  var(--brass);
+  --bg-status-text:       transparent;
+  --bg-waveform:          rgba(16, 16, 32, 0.55);
+  --bg-transcript:        rgba(16, 16, 32, 0.55);
+  --bg-notifications:     transparent;
+  --bg-notification-item: var(--panel);
+  --bg-notif-btn:         var(--brass);
+  --bg-notif-badge:       var(--ember);
+  --section-border:       1px solid var(--line);
+}
+
+body.theme-black-blue.listening-page,
+body.theme-black-blue.rg-body {
+  background: #000000;
+}
+
+body.theme-black-blue .listening-breathing .circle-outer {
+  box-shadow: 0 0 34px rgba(61, 123, 255, 0.14), inset 0 0 22px rgba(61, 123, 255, 0.08);
+}
+body.theme-black-blue .listening-breathing .circle-inner {
+  box-shadow: 0 0 18px rgba(61, 123, 255, 0.20);
+}
+
+body.theme-black-blue .guardian::before {
+  background: radial-gradient(circle at 50% 38%, #14142a 0%, #080818 78%);
+  border: 1px solid rgba(61, 123, 255, 0.35);
+}
+body.theme-black-blue .guardian-ring {
+  border-color: rgba(61, 123, 255, 0.40);
+}
+body.theme-black-blue .guardian-glow {
+  background: radial-gradient(circle, rgba(61, 123, 255, 0.22) 0%, rgba(61, 123, 255, 0) 68%);
+}
+body.theme-black-blue .guardian-img {
+  filter: drop-shadow(0 4px 12px rgba(61, 123, 255, 0.20));
+}
+
+body.theme-black-blue .guardian.is-recording .guardian-ring {
+  border-color: var(--ember);
+  box-shadow: 0 0 14px rgba(255, 61, 61, 0.30);
+}
+body.theme-black-blue .guardian.is-recording .guardian-glow {
+  background: radial-gradient(circle, rgba(255, 61, 61, 0.35) 0%, rgba(255, 61, 61, 0) 68%);
+}
+body.theme-black-blue .guardian.is-recording .guardian-img {
+  filter: drop-shadow(0 0 14px rgba(255, 61, 61, 0.45));
+}
+
+body.theme-black-blue .app-bottom {
+  background: linear-gradient(180deg, rgba(61, 123, 255, 0) 0%, rgba(0, 0, 0, 0.7) 100%);
+}
+
+body.theme-black-blue .notif-alert-btn {
+  background: var(--brass);
+}
+
+body.theme-black-blue #timer {
+  color: var(--brass-bright);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.theme-black-blue .app-bottom { animation: none !important; opacity: 1 !important; transform: none !important; }
+}

@@ -1,0 +1,97 @@
+/* ============================================================
+   Rights Guardian — "Pretty Pink" theme  (rose dark)
+
+   Romantic dark theme with deep mauve backgrounds and bright
+   rose-gold / pink accents. Soft, warm, bold.
+
+   Activates via:  <body class="theme-pretty-pink">
+   ============================================================ */
+
+body.theme-pretty-pink {
+  --ink-900: #180e14;
+  --ink-800: #201520;
+  --ink-700: #2c1c2a;
+  --panel:   #281a26;
+  --line:    #3d2a3a;
+
+  --brass:        #e87a9f;
+  --brass-bright: #f5a3c0;
+  --brass-dim:    rgba(232, 122, 159, 0.15);
+
+  --parchment: #f0e4ea;
+  --muted:     #9a7a8e;
+
+  --ember:      #d4406a;
+  --ember-soft: rgba(212, 64, 106, 0.25);
+
+  --text-body: var(--parchment);
+  --bg-page: var(--ink-900);
+  --bg-page-image: none;
+
+  --bg-breathing:         rgba(232, 122, 159, 0.05);
+  --circle-bg-outer:      rgba(232, 122, 159, 0.14);
+  --circle-border-outer:  rgba(232, 122, 159, 0.38);
+  --circle-bg-inner:      rgba(232, 122, 159, 0.22);
+  --circle-border-inner:  var(--brass);
+  --bg-status-text:       transparent;
+  --bg-waveform:          rgba(40, 26, 38, 0.55);
+  --bg-transcript:        rgba(40, 26, 38, 0.55);
+  --bg-notifications:     transparent;
+  --bg-notification-item: var(--panel);
+  --bg-notif-btn:         var(--brass);
+  --bg-notif-badge:       var(--ember);
+  --section-border:       1px solid var(--line);
+}
+
+body.theme-pretty-pink.listening-page,
+body.theme-pretty-pink.rg-body {
+  background: linear-gradient(180deg, #201520 0%, #180e14 100%);
+}
+
+body.theme-pretty-pink .listening-breathing .circle-outer {
+  box-shadow: 0 0 34px rgba(232, 122, 159, 0.12), inset 0 0 22px rgba(232, 122, 159, 0.06);
+}
+body.theme-pretty-pink .listening-breathing .circle-inner {
+  box-shadow: 0 0 18px rgba(232, 122, 159, 0.18);
+}
+
+body.theme-pretty-pink .guardian::before {
+  background: radial-gradient(circle at 50% 38%, #362436 0%, #221622 78%);
+  border: 1px solid rgba(232, 122, 159, 0.30);
+}
+body.theme-pretty-pink .guardian-ring {
+  border-color: rgba(232, 122, 159, 0.35);
+}
+body.theme-pretty-pink .guardian-glow {
+  background: radial-gradient(circle, rgba(232, 122, 159, 0.20) 0%, rgba(232, 122, 159, 0) 68%);
+}
+body.theme-pretty-pink .guardian-img {
+  filter: drop-shadow(0 4px 12px rgba(232, 122, 159, 0.18));
+}
+
+body.theme-pretty-pink .guardian.is-recording .guardian-ring {
+  border-color: var(--ember);
+  box-shadow: 0 0 14px rgba(212, 64, 106, 0.28);
+}
+body.theme-pretty-pink .guardian.is-recording .guardian-glow {
+  background: radial-gradient(circle, rgba(212, 64, 106, 0.32) 0%, rgba(212, 64, 106, 0) 68%);
+}
+body.theme-pretty-pink .guardian.is-recording .guardian-img {
+  filter: drop-shadow(0 0 14px rgba(212, 64, 106, 0.40));
+}
+
+body.theme-pretty-pink .app-bottom {
+  background: linear-gradient(180deg, rgba(232, 122, 159, 0) 0%, rgba(24, 14, 20, 0.6) 100%);
+}
+
+body.theme-pretty-pink .notif-alert-btn {
+  background: var(--ember);
+}
+
+body.theme-pretty-pink #timer {
+  color: var(--brass-bright);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.theme-pretty-pink .app-bottom { animation: none !important; opacity: 1 !important; transform: none !important; }
+}
