@@ -41,25 +41,49 @@ function createModal({ id, title, body, closeLabel = 'Close', scrollable = false
     + '</div>';
 }
 
+function getOrUpdateSettings(autoStart, keepDataLocal, hapticFeedback, theme) {
+  /* Read mode: no args / all null — return current values from localStorage */
+  if (autoStart == null) {
+    return {
+      autoStart: localStorage.getItem(LOCALSTORAGE_AUTOSTART) === 'true',
+      keepDataLocal: localStorage.getItem(LOCALSTORAGE_KEEPDATALOCAL) !== 'false',
+      hapticFeedback: localStorage.getItem(LOCALSTORAGE_SETHAPTICS) !== 'false',
+      theme: localStorage.getItem(LOCALSTORAGE_THEME) || 'theme-brass-ink'
+    };
+  }
+
+  /* Update mode: save each provided value to localStorage */
+  localStorage.setItem(LOCALSTORAGE_AUTOSTART, String(!!autoStart));
+  localStorage.setItem(LOCALSTORAGE_KEEPDATALOCAL, String(!!keepDataLocal));
+  localStorage.setItem(LOCALSTORAGE_SETHAPTICS, String(!!hapticFeedback));
+  if (theme) localStorage.setItem(LOCALSTORAGE_THEME, theme);
+
+  return { autoStart, keepDataLocal, hapticFeedback, theme };
+}
+
 /* ===== Each modal is now just data ===== */
-const SETTINGS_MODAL = createModal({
-  id: 'settingsModal',
-  title: 'Settings',
-  closeLabel: 'Done',
-  body: ''
-    + '<div class="form-check form-switch mb-3">'
-    +   '<input class="form-check-input" type="checkbox" role="switch" id="setAutoStart">'
-    +   '<label class="form-check-label" for="setAutoStart">Start recording on launch</label>'
-    + '</div>'
-    + '<div class="form-check form-switch mb-3">'
-    +   '<input class="form-check-input" type="checkbox" role="switch" id="setKeepLocal" checked>'
-    +   '<label class="form-check-label" for="setKeepLocal">Keep recordings on this device</label>'
-    + '</div>'
-    + '<div class="form-check form-switch">'
-    +   '<input class="form-check-input" type="checkbox" role="switch" id="setHaptics" checked>'
-    +   '<label class="form-check-label" for="setHaptics">Vibrate when recording starts</label>'
-    + '</div>'
-});
+const SETTINGS_MODAL = () => {
+  const s = getOrUpdateSettings();
+
+  return createModal({
+    id: 'settingsModal',
+    title: 'Settings',
+    closeLabel: 'Done',
+    body: ''
+      + '<div class="form-check form-switch mb-3">'
+      +   `<input class="form-check-input" type="checkbox" role="switch" id="setAutoStart" ${s.autoStart ? 'checked' : ''}>`
+      +   '<label class="form-check-label" for="setAutoStart">Start recording on launch</label>'
+      + '</div>'
+      + '<div class="form-check form-switch mb-3">'
+      +   `<input class="form-check-input" type="checkbox" role="switch" id="setKeepLocal" ${s.keepDataLocal ? 'checked' : ''}>`
+      +   '<label class="form-check-label" for="setKeepLocal">Keep recordings on this device</label>'
+      + '</div>'
+      + '<div class="form-check form-switch">'
+      +   `<input class="form-check-input" type="checkbox" role="switch" id="setHaptics" ${s.hapticFeedback ? 'checked' : ''}>`
+      +   '<label class="form-check-label" for="setHaptics">Vibrate when recording starts</label>'
+      + '</div>'
+  });
+}
 
 const LEARN_MODAL = createModal({
   id: 'learnModal',
@@ -83,13 +107,6 @@ const NOTICES_MODAL = createModal({
     +   'it does not substitute for the counsel of a licensed attorney.</p>'
 });
 
-/* ===== Mount them (mirrors the APP_FOOTER injection) ===== */
-const APP_MODALS = SETTINGS_MODAL + LEARN_MODAL + NOTICES_MODAL;
-const modalContainer = document.getElementById('app-modals');
-if (modalContainer) {
-  modalContainer.innerHTML = APP_MODALS;
-}
-
 /* ===== Shared footer ===== */
 const APP_FOOTER = ''
   + '<footer class="app-bottom">'
@@ -108,18 +125,33 @@ const APP_FOOTER = ''
   + '</footer>';
 
 
+
+
 document.addEventListener('DOMContentLoaded', () => {
-  var footerContainer = document.getElementById('app-footer');
-  if (footerContainer) {
-    footerContainer.innerHTML = APP_FOOTER;
+  /* Mount footer */
+  const footerEl = document.getElementById('app-footer');
+  if (footerEl) footerEl.innerHTML = APP_FOOTER;
+
+  /* Mount modals into the placeholder divs in each page */
+  const settingsEl = document.getElementById('settings-modal');
+  if (settingsEl) settingsEl.innerHTML = SETTINGS_MODAL();
+
+  const learnEl = document.getElementById('learm-more-modal');
+  if (learnEl) learnEl.innerHTML = LEARN_MODAL;
+
+  const noticesEl = document.getElementById('notices-modal');
+  if (noticesEl) noticesEl.innerHTML = NOTICES_MODAL;
+});
+
+/* Auto-save settings when any toggle in the settings modal changes */
+document.addEventListener('change', (e) => {
+  if (!e.target.matches('#settingsModal .form-check-input')) return;
+
+  const s = getOrUpdateSettings();
+  const checked = e.target.checked;
+  switch (e.target.id) {
+    case 'setAutoStart':    getOrUpdateSettings(checked, s.keepDataLocal, s.hapticFeedback, s.theme); break;
+    case 'setKeepLocal':    getOrUpdateSettings(s.autoStart, checked, s.hapticFeedback, s.theme); break;
+    case 'setHaptics':      getOrUpdateSettings(s.autoStart, s.keepDataLocal, checked, s.theme); break;
   }
-
-  var modal = document.getElementById("settings-modal");
-  modal.innerHTML = SETTINGS_MODAL
-
-  modal = document.getElementById("learm-more-modal");
-  modal.innerHTML = LEARN_MODAL
-
-  modal = document.getElementById("notices-modal");
-  modal.innerHTML = NOTICES_MODAL
 });
