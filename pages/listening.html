@@ -11,8 +11,9 @@
   <!-- Page styles -->
   <link rel="stylesheet" href="../css/listening.css">
 
-  <script src="../js/common.js" defer></script>
   <script src="../js/listening.js" defer></script>
+  <script src="../js/recording.js" defer></script>
+  <script src="../js/config.js"></script>
   <script defer>
     document.addEventListener('DOMContentLoaded', () => {
       var breathing = document.getElementById('listening-breathing');
@@ -68,7 +69,9 @@
         <!-- Section 3: Live STT Transcript -->
         <section id="listening-transcript" class="listening-transcript">
           <!-- live transcript will appear here -->
-          <p id="live-transcription"></p>
+          <p id="live-transcription-1"></p>
+          <p id="live-transcription-2"></p>
+          <p id="live-transcription-3"></p>
         </section>
 
       </div>
