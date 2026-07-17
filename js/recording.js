@@ -41,7 +41,6 @@ let sessionEnding = false;       // true once we deliberately close the stream
 let transcriptLines = [];        // [{speaker,start,end,text}] — grows live
 
 async function startRecording() {
-    console.log("Start hit");
   try {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
@@ -76,7 +75,8 @@ async function startRecording() {
 
     alert('Recording started');
   } catch (err) {
-    console.log(`Microphone unavailable: ${err.message}`);
+    setRecordingUI(false);
+    statusEl.textContent = `Microphone unavailable: ${err.message}`;
   }
 }
 
@@ -245,8 +245,12 @@ function emit(detail) {
 
 function startTimer() {
   seconds = 0;
+  timerEl.textContent = '00:00';
   timerInterval = setInterval(() => {
     seconds++;
+    const mm = String(Math.floor(seconds / 60)).padStart(2, '0');
+    const ss = String(seconds % 60).padStart(2, '0');
+    timerEl.textContent = `${mm}:${ss}`;
   }, 1000);
 }
 
@@ -255,43 +259,3 @@ function stopTimer() {
   timerInterval = null;
   console.log("Seconds Recorded: " + seconds);
 }
-
-window.addEventListener('load', (event) => {
-  startRecording();
-});
-
-document.getElementById('circle-inner').addEventListener('click', (event) =>{
-    stopRecording();
-});
-
-
-/* Real-time voice data (from recording.js's Deepgram stream) → console */
-document.addEventListener('rg-transcript', (e) => {
-  const msg = e.detail;
-  switch (msg.type) {
-    case 'transcript':
-      if (msg.final) {
-        for (const l of msg.lines) {
-            const speaker = l.speaker;
-            const message = l.text;
-            const timeStart = l.start.toFixed(1);
-            const timeEnd = l.end.toFixed(1);
-            
-            const textBox = document.getElementById(`live-transcription-` + speaker);
-            textBox.textContent = "Speaker " + speaker + ": " + message; 
-
-            console.log("TextBox ", textBox);
-            console.log("Speaker " + speaker + ": " + message);
-        }
-      } else {
-        console.log(`[interim] ${msg.text}`);
-      }
-      break;
-    case 'ready':          console.log(`[transcript] session started: ${msg.session}`); break;
-    case 'session_closed': console.log(`[transcript] session ${msg.session} done — ${msg.lineCount} lines. Call downloadTranscript() to save it.`); break;
-    case 'error':          console.warn(`[transcript] ${msg.message}`); break;
-  }
-});
-
-
-
