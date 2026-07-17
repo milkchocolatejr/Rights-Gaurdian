@@ -10,12 +10,21 @@
   <!-- Bootstrap 5 -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
-  <!-- App styles (override Bootstrap) -->
   <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/themes/theme-brass-ink.css">
+  <link rel="stylesheet" href="../css/themes/theme-debug.css">
+
+  <!-- Shared theme (palette, fonts, chrome) then index structure -->
   <script src="../js/config.js" defer></script>
-  <script src="../js/recording.js" defer></script>
   <script src="../js/common.js" defer></script>
+  <script defer>
+    document.addEventListener('DOMContentLoaded', () => {
+
+      document.getElementById('recBtn').addEventListener("click", function() {
+        window.location.href = window.location.href.replace("index.html", "listening.html");
+      });
+    });
+  </script>
   <title>Rights Guardian</title>
 </head>
 <body class="rg-body">
@@ -28,111 +37,28 @@
 
     <!-- Center: guardian medallion -->
     <main class="app-main flex-grow-1 d-flex flex-column align-items-center justify-content-center">
-      <button class="guardian" id="recBtn" aria-label="Click to begin recording">
+      <button class="guardian" id="recBtn" onclick="location.href='listening.html'" aria-label="Go to recording">
         <span class="guardian-glow" aria-hidden="true"></span>
         <span class="guardian-ring" aria-hidden="true"></span>
         <img class="guardian-img" src="../icons/guardian.png" alt="Rights Guardian emblem">
       </button>
 
-      <p class="subtitle" id="subtitle">Click to begin defending your rights</p>
-
-      <div class="rec-meta" id="recMeta" aria-hidden="true">
-        <span class="rec-dot"></span>
-        <span>REC</span>
-        <span class="rec-timer" id="timer">00:00</span>
-      </div>
-
-      <p class="rg-status" id="status" role="status" aria-live="polite">Ready</p>
+      <p class="subtitle" id="subtitle">Tap the emblem to begin</p>
     </main>
 
-    <!-- Bottom bar -->
-    <footer class="app-bottom">
-      <div class="d-flex align-items-center justify-content-between">
-        <button class="bar-btn" data-bs-toggle="modal" data-bs-target="#settingsModal">
-          <i class="bi bi-gear-fill"></i><span>Settings</span>
-        </button>
-
-        <button class="bar-btn center" data-bs-toggle="modal" data-bs-target="#learnModal">
-          <i class="bi bi-shield-check"></i><span>Learn More</span>
-        </button>
-
-        <button class="bar-btn" data-bs-toggle="modal" data-bs-target="#noticesModal">
-          <span class="label-long">Notices &amp; Disclosures</span>
-          <i class="bi bi-file-earmark-text"></i>
-        </button>
-      </div>
-    </footer>
+    <!-- Bottom bar (injected by common.js) -->
+    <div id="app-footer"></div>
   </div>
 
   <!-- ===== Settings modal ===== -->
-  <div class="modal fade" id="settingsModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content rg-modal">
-        <div class="modal-header">
-          <h2 class="modal-title h5">Settings</h2>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <div class="form-check form-switch mb-3">
-            <input class="form-check-input" type="checkbox" role="switch" id="setAutoStart">
-            <label class="form-check-label" for="setAutoStart">Start recording on launch</label>
-          </div>
-          <div class="form-check form-switch mb-3">
-            <input class="form-check-input" type="checkbox" role="switch" id="setKeepLocal" checked>
-            <label class="form-check-label" for="setKeepLocal">Keep recordings on this device</label>
-          </div>
-          <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" role="switch" id="setHaptics" checked>
-            <label class="form-check-label" for="setHaptics">Vibrate when recording starts</label>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn rg-btn-brass" data-bs-dismiss="modal">Done</button>
-        </div>
-      </div>
-    </div>
-  </div>
+  <div id="settings-modal"></div>
 
   <!-- ===== Learn More modal ===== -->
-  <div class="modal fade" id="learnModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content rg-modal">
-        <div class="modal-header">
-          <h2 class="modal-title h5">Learn More</h2>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <p><strong>Rights Guardian</strong> turns your phone into a witness. Tap the emblem to
-          begin an audio record of any encounter where your rights matter.</p>
-          <p>Recordings stay on your device unless you choose to share them. Nothing is uploaded
-          automatically, and the app works even without a connection.</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn rg-btn-brass" data-bs-dismiss="modal">Got it</button>
-        </div>
-      </div>
-    </div>
+  <div id="learm-more-modal">
   </div>
 
   <!-- ===== Notices & Disclosures modal ===== -->
-  <div class="modal fade" id="noticesModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-      <div class="modal-content rg-modal">
-        <div class="modal-header">
-          <h2 class="modal-title h5">Notices &amp; Disclosures</h2>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <p>Recording laws vary by jurisdiction. Some regions require the consent of all parties
-          before audio may be captured. You are responsible for knowing the law where you are.</p>
-          <p>This app does not provide legal advice. It is a tool for documentation only, and using
-          it does not substitute for the counsel of a licensed attorney.</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn rg-btn-brass" data-bs-dismiss="modal">Close</button>
-        </div>
-      </div>
-    </div>
+  <div id="notices-modal">
   </div>
 
   <!-- Bootstrap JS bundle -->

@@ -14,7 +14,12 @@ class RelevantEvent {
 function toggleAnimation() {
   var el = document.getElementById('listening-breathing');
   if (el) {
-    el.classList.toggle('paused');
+    var wasPaused = el.classList.toggle('paused');
+    if (wasPaused) {
+      if (typeof stopRecording === 'function') stopRecording();
+    } else {
+      if (typeof startRecording === 'function') startRecording();
+    }
   }
 }
 
@@ -61,6 +66,24 @@ function pushReleventEvent(title, fullText, noteText) {
   var badge = document.querySelector('.notif-alert-badge');
   if (badge) badge.style.display = 'block';
 }
+
+document.addEventListener('rg-transcript', (e) => {
+  const msg = e.detail;
+  switch (msg.type) {
+    case 'transcript':
+      if (msg.final) {
+        for (const l of msg.lines) {
+          console.log(`[transcript] Speaker ${l.speaker} (${l.start.toFixed(1)}s–${l.end.toFixed(1)}s): ${l.text}`);
+        }
+      } else {
+        console.log(`[interim] ${msg.text}`);
+      }
+      break;
+    case 'ready':          console.log(`[transcript] session started: ${msg.session}`); break;
+    case 'session_closed': console.log(`[transcript] session ${msg.session} done — ${msg.lineCount} lines. Call downloadTranscript() to save it.`); break;
+    case 'error':          console.warn(`[transcript] ${msg.message}`); break;
+  }
+});
 
 // Wire up static notification items on page load
 document.addEventListener('DOMContentLoaded', function() {
