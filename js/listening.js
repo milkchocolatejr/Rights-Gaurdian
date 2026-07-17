@@ -67,21 +67,22 @@ function pushReleventEvent(title, fullText, noteText) {
   if (badge) badge.style.display = 'block';
 }
 
+/* On-screen transcript: latest final line per speaker → #live-transcription-N.
+   (Console logging of the same events lives in common.js.) */
 document.addEventListener('rg-transcript', (e) => {
   const msg = e.detail;
-  switch (msg.type) {
-    case 'transcript':
-      if (msg.final) {
-        for (const l of msg.lines) {
-          console.log(`[transcript] Speaker ${l.speaker} (${l.start.toFixed(1)}s–${l.end.toFixed(1)}s): ${l.text}`);
-        }
-      } else {
-        console.log(`[interim] ${msg.text}`);
-      }
-      break;
-    case 'ready':          console.log(`[transcript] session started: ${msg.session}`); break;
-    case 'session_closed': console.log(`[transcript] session ${msg.session} done — ${msg.lineCount} lines. Call downloadTranscript() to save it.`); break;
-    case 'error':          console.warn(`[transcript] ${msg.message}`); break;
+  if (msg.type !== 'transcript' || !msg.final) return;
+
+  for (const l of msg.lines) {
+    var textBox = document.getElementById('live-transcription-' + l.speaker);
+    if (!textBox) {
+      var section = document.getElementById('listening-transcript');
+      if (!section) continue;
+      textBox = document.createElement('p');
+      textBox.id = 'live-transcription-' + l.speaker;
+      section.appendChild(textBox);
+    }
+    textBox.textContent = 'Speaker ' + l.speaker + ': ' + l.text;
   }
 });
 

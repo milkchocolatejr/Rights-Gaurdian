@@ -23,7 +23,7 @@ let mediaRecorder = null;
 let recording = false;
 let timerInterval = null;
 let seconds = 0;
-let timerEL = null;
+let timerEl = null;   // bound to #timer by the listening page's inline script
 
 /* Captured audio (rebuilt each recording) */
 const CHUNK_MS = 250;            // small timeslice keeps live transcription snappy
@@ -165,7 +165,12 @@ function openTranscriptSocket() {
       if (!sessionEnding) {
         // Dropped mid-recording (network blip, provider timeout, …):
         // surface it and hand over whatever transcript we have.
-        console.warn(`[transcript] connection closed unexpectedly (code ${ev.code}${ev.reason ? ': ' + ev.reason : ''})`);
+        const hint =
+          ev.code === 1011 ? ' — Deepgram timed out waiting for audio. The mic stream is not producing data; browsers deny mic access on file:// pages, so serve the site over http://localhost instead.' :
+          ev.code === 1006 ? ' — handshake or network failure (bad API key, offline, or a proxy blocking wss).' :
+          ev.code === 1008 ? ' — Deepgram rejected the audio or request (check API key and audio format).' :
+          '';
+        console.warn(`[transcript] connection closed unexpectedly (code ${ev.code}${ev.reason ? ': ' + ev.reason : ''})${hint}`);
         emit({ type: 'error', message: `Transcription stream dropped (code ${ev.code}). Partial transcript kept.` });
         emit({ type: 'session_closed', session: sessionName, lineCount: transcriptLines.length });
         transcriptWS = null;

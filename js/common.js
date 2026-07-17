@@ -17,9 +17,7 @@ document.addEventListener('rg-transcript', (e) => {
   }
 });
 
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js');
-}
+/* Service worker registration lives in js/config.js — see README. */
 
 /* ===== Reusable modal component ===== */
 function createModal({ id, title, body, closeLabel = 'Close', scrollable = false }) {
