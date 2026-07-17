@@ -89,6 +89,8 @@ const SETTINGS_MODAL = () => {
       +     `<option value="theme-brass-ink" ${s.theme === 'theme-brass-ink' ? 'selected' : ''}>Brass &amp; Ink</option>`
       +     `<option value="theme-dark" ${s.theme === 'theme-dark' ? 'selected' : ''}>Dark</option>`
       +     `<option value="theme-light" ${s.theme === 'theme-light' ? 'selected' : ''}>Light</option>`
+      +     `<option value="theme-blood-iron" ${s.theme === 'theme-blood-iron' ? 'selected' : ''}>Blood &amp; Iron</option>`
+      +     `<option value="theme-land-water" ${s.theme === 'theme-land-water' ? 'selected' : ''}>Land &amp; Water</option>`
       +     `<option value="debug" ${s.theme === 'debug' ? 'selected' : ''}>Debug</option>`
       +   '</select>'
       + '</div>'
@@ -233,7 +235,7 @@ document.addEventListener('change', (e) => {
 
   if (e.target.id === 'setTheme') {
     /* Swap body class: remove old theme, add new one */
-    document.body.classList.remove('theme-brass-ink', 'debug', 'theme-dark', 'theme-light');
+    document.body.classList.remove('theme-brass-ink', 'debug', 'theme-dark', 'theme-light', 'theme-blood-iron', 'theme-land-water');
     document.body.classList.add(e.target.value);
     getOrUpdateSettings(s.autoStart, s.keepDataLocal, s.hapticFeedback, e.target.value);
   }
