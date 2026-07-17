@@ -22,6 +22,7 @@
   <link rel="stylesheet" href="../css/themes/theme-c-red-tv.css">
   <link rel="stylesheet" href="../css/themes/theme-mint.css">
   <link rel="stylesheet" href="../css/themes/theme-noir.css">
+  <link rel="stylesheet" href="../css/themes/theme-state-farm.css">
   <link rel="stylesheet" href="../css/themes/theme-debug.css">
 
   <script src="../js/config.js" defer></script>
@@ -35,6 +36,9 @@
     document.addEventListener('DOMContentLoaded', () => {
       var breathing = document.getElementById('listening-breathing');
       if (breathing) breathing.addEventListener('click', toggleRecording);
+
+      var endBtn = document.getElementById('end-session-btn');
+      if (endBtn) endBtn.addEventListener('click', endSession);
 
       timerEl = document.getElementById("timer");
 
@@ -79,18 +83,27 @@
         </section>
 
         <!-- Section 3: Live STT Transcript -->
-        <section id="listening-transcript" class="listening-transcript">
+        <section id="listening-transcript" class="listening-transcript mb-4">
           <!-- live transcript will appear here, one line per speaker -->
           <p id="live-transcription-1"></p>
           <p id="live-transcription-2"></p>
           <p id="live-transcription-3"></p>
         </section>
 
-      </div>
+        <!-- Section 4: End the session — sends the transcript for analysis -->
+        <button id="end-session-btn" class="end-session-btn" type="button">
+          <i class="bi bi-shield-check"></i>
+          <span id="end-session-label">End Recording &amp; Review Evidence</span>
+        </button>
+        <p id="end-session-error" class="end-session-error" hidden></p>
 
-      <!-- ===== Notifications Panel (side panel on desktop, below on mobile) ===== -->
+      </div>
+      
+      <!-- ===== Notifications Panel (side panel on desktop, below on mobile) ===== 
       <aside id="notification-panel" class="listening-notifications">
       </aside>
+      -->
+      
 
     </div>
 

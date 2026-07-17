@@ -19,21 +19,24 @@ document.addEventListener('rg-transcript', (e) => {
 
 /* Service worker registration lives in js/config.js — see README. */
 
-/* ===== Theme registry: value → display name ===== */
+/* ===== Theme registry =====
+   One entry per theme: body class → label in the Settings picker.
+   The stylesheet must be linked in every page (css/themes/). */
 const THEMES = {
-  'theme-brass-ink': 'Brass &amp; Ink',
-  'theme-dark': 'Dark',
-  'theme-light': 'Light',
+  'theme-brass-ink':  'Brass &amp; Ink',
+  'theme-dark':       'Dark',
+  'theme-light':      'Light',
   'theme-blood-iron': 'Blood &amp; Iron',
   'theme-land-water': 'Land &amp; Water',
-  'theme-pretty-pink': 'Pretty Pink',
+  'theme-pretty-pink':'Pretty Pink',
   'theme-black-blue': 'Black &amp; Blue',
-  'theme-flaming-hot': 'Flaming Hot',
-  'theme-royalty': 'Royalty',
-  'theme-c-red-tv': 'C-Red-TV',
-  'theme-mint': 'Mint',
-  'theme-noir': 'Noir',
-  'debug': 'Debug',
+  'theme-flaming-hot':'Flaming Hot',
+  'theme-royalty':    'Royalty',
+  'theme-c-red-tv':   'C-Red-TV',
+  'theme-mint':       'Mint',
+  'theme-noir':       'Noir',
+  'theme-state-farm': 'State Farm',
+  'debug':            'Debug',
 };
 
 /* ===== Reusable modal component ===== */
@@ -60,7 +63,7 @@ function getOrUpdateSettings(autoStart, keepDataLocal, hapticFeedback, theme, lo
   /* Read mode: no args / all null — return current values from localStorage */
   if (autoStart == null) {
     return {
-      autoStart: localStorage.getItem(LOCALSTORAGE_AUTOSTART) === 'true',
+      autoStart: localStorage.getItem(LOCALSTORAGE_AUTOSTART) !== 'false',   /* default ON — recording begins on page load */
       keepDataLocal: localStorage.getItem(LOCALSTORAGE_KEEPDATALOCAL) !== 'false',
       hapticFeedback: localStorage.getItem(LOCALSTORAGE_SETHAPTICS) !== 'false',
       theme: localStorage.getItem(LOCALSTORAGE_THEME) || 'theme-brass-ink',
@@ -104,9 +107,9 @@ const SETTINGS_MODAL = () => {
       + '<div class="mb-2">'
       +   '<label class="form-label" for="setTheme" style="color:var(--muted);font-size:.85rem">Theme</label>'
       +   `<select class="form-select" id="setTheme" style="background:var(--ink-700);border-color:var(--line);color:var(--parchment)">`
-      +     Object.keys(THEMES).map(function(v) {
-              return '<option value="' + v + '" ' + (s.theme === v ? 'selected' : '') + '>' + THEMES[v] + '</option>';
-            }).join('')
+      +     Object.entries(THEMES).map(([value, label]) =>
+              `<option value="${value}" ${s.theme === value ? 'selected' : ''}>${label}</option>`
+            ).join('')
       +   '</select>'
       + '</div>'
       + '<div class="mb-2">'
@@ -182,7 +185,7 @@ const LEARN_MODAL = createModal({
 
 const NOTICES_MODAL = createModal({
   id: 'noticesModal',
-  title: 'Notices &amp; Disclosures',
+  title: 'Legal Disclosures',
   scrollable: true,
   body: ''
     + '<p>Recording laws vary by jurisdiction. Some regions require the consent of all parties '
@@ -202,7 +205,7 @@ const APP_FOOTER = ''
   +       '<i class="bi bi-shield-check"></i><span>Learn More</span>'
   +     '</button>'
   +     '<button class="bar-btn" data-bs-toggle="modal" data-bs-target="#noticesModal">'
-  +       '<span class="label-long">Notices &amp; Disclosures</span>'
+  +       '<span class="label-long">Legal Disclosures</span>'
   +       '<i class="bi bi-file-earmark-text"></i>'
   +     '</button>'
   +   '</div>'
@@ -253,7 +256,7 @@ document.addEventListener('change', (e) => {
   if (e.target.id === 'setTheme') {
     /* Swap body class: remove old theme, add new one */
     console.debug('[RightsGuardian] theme change: from', document.body.className.match(/theme-[-a-z]+/)?.[0] || 'none', '→', e.target.value);
-    document.body.classList.remove.apply(document.body.classList, Object.keys(THEMES));
+    document.body.classList.remove(...Object.keys(THEMES));
     document.body.classList.add(e.target.value);
     getOrUpdateSettings(s.autoStart, s.keepDataLocal, s.hapticFeedback, e.target.value);
     console.debug('[RightsGuardian] theme saved to localStorage:', localStorage.getItem('RightsGaurdian_theme'));

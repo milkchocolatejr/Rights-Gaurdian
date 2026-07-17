@@ -1,43 +1,30 @@
 /* ============================================================
-   Rights Guardian — brass & ink identity
-   Fonts: Libre Caslon Display (title) · Hanken Grotesk (UI) · DM Mono (readout)
+   Rights Guardian — INDEX page structure only.
+
+   No colors live here: palette tokens, fonts, and shared chrome
+   (bottom bar + modals + accent button) come from the theme files
+   in css/themes/, which every page loads. Structure consumes the
+   theme's CSS variables so a body theme class restyles this page
+   like every other.
+
+     <link rel="stylesheet" href="../css/styles.css">
+     <link rel="stylesheet" href="../css/themes/theme-brass-ink.css">
+     <link rel="stylesheet" href="../css/themes/theme-state-farm.css">
+     <link rel="stylesheet" href="../css/themes/theme-debug.css">
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&family=Hanken+Grotesk:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
-
-:root {
-  --ink-900: #090e17;
-  --ink-800: #0d1422;
-  --ink-700: #121b2d;
-  --panel:   #131d31;
-  --line:    #26324a;
-
-  --brass:        #c8a35c;
-  --brass-bright: #e8ca84;
-  --brass-dim:    rgba(200, 163, 92, 0.16);
-
-  --parchment: #ece4d3;
-  --muted:     #8a94a8;
-
-  --ember:      #d75c4d;
-  --ember-soft: rgba(215, 92, 77, 0.28);
-
-  --font-display: 'Libre Caslon Display', Georgia, serif;
-  --font-ui: 'Hanken Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-mono: 'DM Mono', ui-monospace, monospace;
-}
-
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* Index-only structural token (palette/fonts come from the theme) */
+:root { --medallion: clamp(168px, 38vmin, 360px); }
 
 /* Override Bootstrap's body defaults */
 body.rg-body {
   min-height: 100vh;
   font-family: var(--font-ui);
-  color: var(--parchment);
-  background:
-    radial-gradient(115% 78% at 50% 34%, rgba(200, 163, 92, 0.10) 0%, rgba(200, 163, 92, 0) 55%),
-    radial-gradient(140% 120% at 50% 120%, rgba(9, 14, 23, 0) 30%, rgba(4, 7, 12, 0.9) 100%),
-    linear-gradient(180deg, var(--ink-800) 0%, var(--ink-900) 100%);
+  color: var(--text-body);
+  background-color: var(--bg-page);
+  background-image: var(--bg-page-image, none);
   background-attachment: fixed;
   overflow-x: hidden;
 }
@@ -69,7 +56,7 @@ body.rg-body {
   text-indent: .16em;
   text-transform: uppercase;
   line-height: 1;
-  color: var(--parchment);
+  color: var(--text-body);
 }
 .app-title .amp { color: var(--brass); }
 
@@ -101,7 +88,7 @@ body.rg-body {
   inset: -22%;
   z-index: -2;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(200,163,92,.42) 0%, rgba(200,163,92,0) 68%);
+  background: radial-gradient(circle, var(--accent-glow) 0%, transparent 68%);
   filter: blur(6px);
   animation: breathe 5.5s ease-in-out infinite;
 }
@@ -112,7 +99,7 @@ body.rg-body {
   inset: 0;
   z-index: -1;
   border-radius: 50%;
-  border: 1.5px dashed rgba(200, 163, 92, 0.55);
+  border: 1.5px dashed var(--accent-ring);
   animation: spin 46s linear infinite;
   transition: border-color .4s ease, box-shadow .4s ease;
 }
@@ -123,9 +110,9 @@ body.rg-body {
   inset: 8%;
   z-index: -1;
   border-radius: 50%;
-  background: radial-gradient(circle at 50% 38%, #1a2439 0%, #0e1626 78%);
-  border: 1px solid rgba(200, 163, 92, 0.4);
-  box-shadow: inset 0 1px 14px rgba(0,0,0,.55), 0 6px 30px rgba(0,0,0,.45);
+  background: var(--medallion-face);
+  border: 1px solid var(--accent-ring-soft);
+  box-shadow: inset 0 1px 14px rgba(0,0,0,.25), 0 6px 30px rgba(0,0,0,.2);
 }
 
 .guardian-img {
@@ -134,7 +121,7 @@ body.rg-body {
   object-fit: contain;
   object-position: center;
   transform: translateY(4%);
-  filter: drop-shadow(0 4px 12px rgba(0,0,0,.5));
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,.35));
   transition: filter .4s ease;
   pointer-events: none;
 }
@@ -147,17 +134,17 @@ body.rg-body {
   animation: spin 46s linear infinite, pulse-ring 1.5s ease-out infinite;
 }
 .guardian.is-recording .guardian-glow {
-  background: radial-gradient(circle, rgba(215,92,77,.5) 0%, rgba(215,92,77,0) 68%);
+  background: radial-gradient(circle, var(--ember-soft) 0%, transparent 68%);
   animation: breathe 2.4s ease-in-out infinite;
 }
-.guardian.is-recording .guardian-img { filter: drop-shadow(0 0 10px rgba(215,92,77,.55)); }
+.guardian.is-recording .guardian-img { filter: drop-shadow(0 0 10px var(--ember-soft)); }
 
 /* ---------- Subtitle + readout ---------- */
 .subtitle {
   margin-top: clamp(1.6rem, 4vh, 2.6rem);
   font-size: clamp(.95rem, 2.3vw, 1.18rem);
   font-weight: 500;
-  color: var(--parchment);
+  color: var(--text-body);
   letter-spacing: .01em;
   animation: rise .9s cubic-bezier(.22,.68,.32,1) both;
   animation-delay: .32s;
@@ -185,87 +172,10 @@ body.rg-body {
   box-shadow: 0 0 8px var(--ember);
   animation: blink 1.2s steps(2, start) infinite;
 }
-.rec-timer { color: var(--parchment); }
+.rec-timer { color: var(--text-body); }
 .rg-status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 
-/* ---------- Bottom bar ---------- */
-.app-bottom {
-  border-top: 1px solid rgba(200, 163, 92, 0.16);
-  background: linear-gradient(180deg, rgba(200,163,92,0) 0%, rgba(11,16,26,.5) 100%);
-  padding: clamp(.7rem, 2vh, 1.05rem) clamp(.9rem, 4vw, 2.4rem)
-           calc(clamp(.7rem, 2vh, 1.05rem) + env(safe-area-inset-bottom));
-  animation: rise .9s cubic-bezier(.22,.68,.32,1) both;
-  animation-delay: .46s;
-}
-.bar-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: .55rem;
-  border: 0;
-  background: none;
-  color: var(--muted);
-  font-family: var(--font-ui);
-  font-weight: 500;
-  font-size: clamp(.74rem, 1.9vw, .9rem);
-  letter-spacing: .02em;
-  white-space: nowrap;
-  padding: .5rem .35rem;
-  border-radius: .5rem;
-  cursor: pointer;
-  transition: color .22s ease, transform .22s ease;
-}
-.bar-btn i { font-size: 1.15em; color: var(--brass); transition: color .22s ease; }
-.bar-btn:hover,
-.bar-btn:focus-visible { color: var(--parchment); outline: none; }
-.bar-btn:hover i,
-.bar-btn:focus-visible i { color: var(--brass-bright); }
-.bar-btn:focus-visible { box-shadow: 0 0 0 2px var(--brass-dim); }
-.bar-btn.center { color: var(--parchment); }
-
-@media (max-width: 420px) {
-  .bar-btn .label-long { display: none; }
-}
-
-/* ---------- Bootstrap modal overrides ---------- */
-.modal-content.rg-modal {
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 1rem;
-  color: var(--parchment);
-  box-shadow: 0 24px 60px rgba(0,0,0,.55);
-}
-.rg-modal .modal-header,
-.rg-modal .modal-footer { border-color: var(--line); }
-.rg-modal .modal-title {
-  font-family: var(--font-display);
-  font-weight: 400;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  font-size: 1.25rem;
-  color: var(--brass-bright);
-}
-.rg-modal .btn-close {
-  filter: invert(1) grayscale(1) brightness(1.4);
-  opacity: .6;
-}
-.rg-modal .btn-close:hover { opacity: 1; }
-.rg-modal p { color: var(--muted); line-height: 1.6; }
-.rg-modal strong { color: var(--parchment); }
-.rg-modal .form-check-label { color: var(--parchment); }
-.rg-modal .form-check-input { background-color: var(--ink-700); border-color: var(--line); }
-.rg-modal .form-check-input:checked { background-color: var(--brass); border-color: var(--brass); }
-.rg-modal .form-check-input:focus { box-shadow: 0 0 0 .2rem var(--brass-dim); border-color: var(--brass); }
-.rg-btn-brass {
-  background: var(--brass);
-  color: var(--ink-900);
-  font-weight: 600;
-  border: 0;
-  letter-spacing: .02em;
-}
-.rg-btn-brass:hover { background: var(--brass-bright); color: var(--ink-900); }
-
-/* ---------- Keyframes ---------- */
-@keyframes rise   { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+/* ---------- Keyframes (index structure) ---------- */
 @keyframes fade   { from { opacity: 0; } to { opacity: 1; } }
 @keyframes seal-in{ from { opacity: 0; transform: scale(.82) rotate(-8deg); } to { opacity: 1; transform: none; } }
 @keyframes spin   { to { transform: rotate(360deg); } }
@@ -273,8 +183,8 @@ body.rg-body {
 @keyframes blink  { 50% { opacity: .25; } }
 @keyframes pulse-ring {
   0%   { box-shadow: 0 0 0 0 var(--ember-soft); }
-  70%  { box-shadow: 0 0 0 22px rgba(215,92,77,0); }
-  100% { box-shadow: 0 0 0 0 rgba(215,92,77,0); }
+  70%  { box-shadow: 0 0 0 22px transparent; }
+  100% { box-shadow: 0 0 0 0 transparent; }
 }
 
 /* ---------- Reduced motion ---------- */

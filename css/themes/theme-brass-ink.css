@@ -28,8 +28,8 @@ body.theme-brass-ink {
   --brass-bright: #e8ca84;
   --brass-dim:    rgba(200, 163, 92, 0.16);
 
-  --parchment: #ece4d3;
-  --muted:     #8a94a8;
+  --parchment: #ffffff;      /* primary body/heading font — white on the dark ground */
+  --muted:     #9aa4b8;       /* secondary text, nudged lighter to stay readable */
 
   --ember:      #d75c4d;
   --ember-soft: rgba(215, 92, 77, 0.28);
@@ -45,6 +45,13 @@ body.theme-brass-ink {
     radial-gradient(115% 78% at 50% 34%, rgba(200, 163, 92, 0.10) 0%, rgba(200, 163, 92, 0) 55%),
     radial-gradient(140% 120% at 50% 120%, rgba(9, 14, 23, 0) 30%, rgba(4, 7, 12, 0.9) 100%),
     linear-gradient(180deg, var(--ink-800) 0%, var(--ink-900) 100%);
+
+  /* index-page accents (consumed by css/styles.css) */
+  --accent-glow: rgba(200, 163, 92, 0.42);
+  --accent-ring: rgba(200, 163, 92, 0.55);
+  --accent-ring-soft: rgba(200, 163, 92, 0.4);
+  --medallion-face: radial-gradient(circle at 50% 38%, #1a2439 0%, #0e1626 78%);
+  --footer-fade: linear-gradient(180deg, rgba(200,163,92,0) 0%, rgba(11,16,26,.5) 100%);
 
   /* listening-page semantic slots */
   --bg-breathing:         transparent;
@@ -78,6 +85,14 @@ body.theme-brass-ink {
 .notification-title { color: var(--brass-bright); }
 .notification-text  { color: var(--parchment); opacity: .8; }
 
+/* end-session button — brass accents on the structural styles */
+.end-session-btn {
+  font-family: var(--font-ui);
+  color: var(--parchment);
+}
+.end-session-btn i { color: var(--brass); font-size: 1.2em; }
+.end-session-btn:hover:not(:disabled) { border-color: var(--brass); }
+
 /* guardian emblem inside the breathing medallion (delete for bare circles) */
 .listening-breathing::after {
   content: '';
@@ -107,7 +122,7 @@ body.theme-brass-ink {
    ============================================================ */
 .app-bottom {
   border-top: 1px solid var(--brass-dim);
-  background: linear-gradient(180deg, rgba(200,163,92,0) 0%, rgba(11,16,26,.5) 100%);
+  background: var(--footer-fade);
   padding: clamp(.7rem, 2vh, 1.05rem) clamp(.9rem, 4vw, 2.4rem)
            calc(clamp(.7rem, 2vh, 1.05rem) + env(safe-area-inset-bottom));
   animation: rise .9s cubic-bezier(.22,.68,.32,1) both;

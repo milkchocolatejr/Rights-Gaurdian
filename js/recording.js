@@ -36,10 +36,18 @@ const DEEPGRAM_URL =
   'wss://api.deepgram.com/v1/listen' +
   '?model=nova-3&diarize=true&smart_format=true&interim_results=true';
 let transcriptWS = null;
-let dgKeepalive = null;
 let sessionName = null;
 let sessionEnding = false;       // true once we deliberately close the stream
 let transcriptLines = [];        // [{speaker,start,end,text}] — grows live
+let recordingStartedAt = null;   // ISO wall-clock time recording began
+
+/* Deepgram must receive the audio stream from byte 0 — the first chunk
+   carries the WebM container header, and without it nothing that follows
+   can be decoded. Chunks produced while the socket is still connecting are
+   queued here and flushed on open, instead of being dropped. */
+let pendingChunks = [];
+let reconnectAttempts = 0;       // unexpected-drop retries for the current recording
+const MAX_RECONNECT_ATTEMPTS = 2;
 
 async function startRecording() {
   try {
@@ -58,9 +66,7 @@ async function startRecording() {
     mediaRecorder.ondataavailable = (e) => {
       if (e.data && e.data.size > 0) {
         recordedChunks.push(e.data);
-        if (transcriptWS && transcriptWS.readyState === WebSocket.OPEN) {
-          transcriptWS.send(e.data);
-        }
+        sendAudioChunk(e.data);
       }
     };
 
@@ -72,9 +78,16 @@ async function startRecording() {
     mediaRecorder.start(CHUNK_MS);
 
     recording = true;
+    recordingStartedAt = new Date().toISOString();
     startTimer();
 
-    alert('Recording started');
+    /* Recording starts automatically on page load — signal it without a
+       blocking alert. Vibration honors the Settings toggle. */
+    if (typeof getOrUpdateSettings === 'function' &&
+        getOrUpdateSettings().hapticFeedback && navigator.vibrate) {
+      navigator.vibrate(80);
+    }
+    console.log('[recording] started');
   } catch (err) {
     recording = false;
     console.error(err)
@@ -129,7 +142,24 @@ function triggerDownload(blob, filename) {
 
 /* ---------- live transcription ---------- */
 
-function openTranscriptSocket() {
+/* Route one audio chunk to the current socket. While the socket is still
+   connecting the chunk is queued (never dropped — the first chunk holds the
+   WebM header Deepgram needs to decode everything after it). */
+function sendAudioChunk(chunk) {
+  if (!transcriptWS) return;
+  if (transcriptWS.readyState === WebSocket.CONNECTING) {
+    pendingChunks.push(chunk);
+  } else if (transcriptWS.readyState === WebSocket.OPEN) {
+    transcriptWS.send(chunk);
+  }
+  /* CLOSING/CLOSED: drop — recordedChunks keeps the full backlog, and a
+     reconnect replays it from the top. */
+}
+
+/* Open a Deepgram socket. `resume` reconnects mid-recording after an
+   unexpected drop: the session continues, and the entire recording so far
+   is replayed so the stream starts at byte 0 again. */
+function openTranscriptSocket(resume = false) {
   const key = (window.RG_CONFIG || {}).deepgramApiKey;
   if (!key || key === 'your_key_here') {
     console.warn(
@@ -138,43 +168,70 @@ function openTranscriptSocket() {
     );
     return;
   }
-  sessionName = `session-${new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19)}`;
+  if (!resume) {
+    sessionName = `session-${new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19)}`;
+    transcriptLines = [];
+    reconnectAttempts = 0;
+  }
   sessionEnding = false;
-  transcriptLines = [];
+  pendingChunks = resume ? recordedChunks.slice() : [];
+
   try {
     // Browser auth: Deepgram accepts the API key via WS subprotocol.
-    transcriptWS = new WebSocket(DEEPGRAM_URL, ['token', key]);
+    const ws = new WebSocket(DEEPGRAM_URL, ['token', key]);
+    transcriptWS = ws;
+    let keepalive = null;
 
-    transcriptWS.onopen = () => {
-      console.log('[transcript] connected to Deepgram — streaming audio');
-      dgKeepalive = setInterval(() => {
-        if (transcriptWS && transcriptWS.readyState === WebSocket.OPEN) {
-          transcriptWS.send(JSON.stringify({ type: 'KeepAlive' }));
+    ws.onopen = () => {
+      if (ws !== transcriptWS) { ws.close(); return; }   // superseded while connecting
+      const queued = pendingChunks;
+      pendingChunks = [];
+      for (const chunk of queued) ws.send(chunk);
+      console.log(`[transcript] connected to Deepgram — streaming audio` +
+        (queued.length ? ` (${queued.length} queued chunk${queued.length === 1 ? '' : 's'} flushed)` : ''));
+      keepalive = setInterval(() => {
+        if (ws.readyState === WebSocket.OPEN) {
+          ws.send(JSON.stringify({ type: 'KeepAlive' }));
         }
       }, 5000);
       emit({ type: 'ready', session: sessionName });
     };
 
-    transcriptWS.onmessage = (ev) => onDeepgramMessage(ev.data);
-    transcriptWS.onerror = () => {
+    ws.onmessage = (ev) => {
+      if (ws === transcriptWS) onDeepgramMessage(ev.data);
+    };
+    ws.onerror = () => {
+      if (ws !== transcriptWS) return;
       emit({ type: 'error', message: 'Transcription connection error (check network / API key).' });
     };
-    transcriptWS.onclose = (ev) => {
-      clearInterval(dgKeepalive);
-      dgKeepalive = null;
-      if (!sessionEnding) {
-        // Dropped mid-recording (network blip, provider timeout, …):
-        // surface it and hand over whatever transcript we have.
-        const hint =
-          ev.code === 1011 ? ' — Deepgram timed out waiting for audio. The mic stream is not producing data; browsers deny mic access on file:// pages, so serve the site over http://localhost instead.' :
-          ev.code === 1006 ? ' — handshake or network failure (bad API key, offline, or a proxy blocking wss).' :
-          ev.code === 1008 ? ' — Deepgram rejected the audio or request (check API key and audio format).' :
-          '';
-        console.warn(`[transcript] connection closed unexpectedly (code ${ev.code}${ev.reason ? ': ' + ev.reason : ''})${hint}`);
-        emit({ type: 'error', message: `Transcription stream dropped (code ${ev.code}). Partial transcript kept.` });
-        emit({ type: 'session_closed', session: sessionName, lineCount: transcriptLines.length });
-        transcriptWS = null;
+    ws.onclose = (ev) => {
+      clearInterval(keepalive);
+      if (ws !== transcriptWS) return;   // an old socket winding down — already replaced
+      transcriptWS = null;
+      if (sessionEnding) return;         // expected: closeTranscriptSocket's timer wraps up
+
+      // Dropped mid-recording (network blip, provider timeout, …):
+      // reconnect and replay the audio from the top so no speech is lost.
+      if (recording && reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
+        reconnectAttempts++;
+        console.warn(`[transcript] stream dropped (code ${ev.code}${ev.reason ? ': ' + ev.reason : ''})` +
+          ` — reconnecting (attempt ${reconnectAttempts}/${MAX_RECONNECT_ATTEMPTS}) and replaying the recording`);
+        transcriptLines = [];            // the replay re-delivers every final line
+        openTranscriptSocket(true);
+        return;
       }
+
+      // Out of retries (or not recording): surface it and hand over
+      // whatever transcript we have.
+      const hint =
+        ev.code === 1000 ? ' — Deepgram ended the stream. This usually means it never received decodable audio (e.g., the stream was missing its initial WebM header chunk).' :
+        ev.code === 1011 ? ' — Deepgram timed out waiting for audio. The mic stream is not producing data; browsers deny mic access on file:// pages, so serve the site over http://localhost instead.' :
+        ev.code === 1006 ? ' — handshake or network failure (bad API key, offline, or a proxy blocking wss).' :
+        ev.code === 1008 ? ' — Deepgram rejected the audio or request (check API key and audio format).' :
+        '';
+      console.warn(`[transcript] connection closed unexpectedly (code ${ev.code}${ev.reason ? ': ' + ev.reason : ''})${hint}`);
+      emit({ type: 'error', message: `Transcription stream dropped (code ${ev.code}). Partial transcript kept.` });
+      emit({ type: 'session_closed', session: sessionName, lineCount: transcriptLines.length });
     };
   } catch (err) {
     console.warn('Live transcription unavailable:', err.message);
@@ -183,19 +240,21 @@ function openTranscriptSocket() {
 }
 
 function closeTranscriptSocket() {
-  if (transcriptWS && transcriptWS.readyState === WebSocket.OPEN) {
+  const ws = transcriptWS;
+  if (!ws) return;
+  sessionEnding = true;
+  if (ws.readyState === WebSocket.OPEN) {
     // Ask Deepgram to flush trailing finals, then wrap up the session.
-    sessionEnding = true;
-    transcriptWS.send(JSON.stringify({ type: 'CloseStream' }));
-    const ws = transcriptWS;
+    ws.send(JSON.stringify({ type: 'CloseStream' }));
+    const endedSession = sessionName;
     setTimeout(() => {
-      emit({ type: 'session_closed', session: sessionName, lineCount: transcriptLines.length });
-      if (ws.readyState === WebSocket.OPEN) ws.close();
-      transcriptWS = null;
+      emit({ type: 'session_closed', session: endedSession, lineCount: transcriptLines.length });
+      if (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING) ws.close();
+      if (transcriptWS === ws) transcriptWS = null;   // don't clobber a newer socket
     }, 2000);
-  } else if (transcriptWS) {
-    transcriptWS.close();
-    transcriptWS = null;
+  } else {
+    ws.close();
+    if (transcriptWS === ws) transcriptWS = null;
   }
 }
 
