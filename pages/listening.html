@@ -7,18 +7,23 @@
 
   <!-- Bootstrap 5 CDN -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <!-- Page styles -->
   <link rel="stylesheet" href="../css/listening.css">
+  <link rel="stylesheet" href="../css/themes/theme-brass-ink.css">
+  <link rel="stylesheet" href="../css/themes/theme-debug.css">
 
-  <script src="../js/listening.js" defer></script>
+  <script src="../js/config.js" defer></script>
   <script src="../js/recording.js" defer></script>
+  <script src="../js/common.js" defer></script>
+  <script src="../js/listening.js" defer></script>
   <script src="../js/audioVisualizer.js" defer></script>
-  <script src="../js/config.js"></script>
   <script defer>
     document.addEventListener('DOMContentLoaded', () => {
       var breathing = document.getElementById('listening-breathing');
       if (breathing) breathing.addEventListener('click', toggleAnimation);
+
+      timerEl = document.getElementById("timer")
     });
   </script>
   <style>
@@ -45,7 +50,7 @@
 
         <!-- ===== Breathing Circles ===== -->
         <div class="listening-breathing-row">
-          <div id="listening-breathing" class="listening-breathing">
+          <div id="listening-breathing" class="listening-breathing paused">
             <div id="circle-outer" class="circle-outer"></div>
             <div id="circle-inner" class="circle-inner"></div>
           </div>
@@ -59,6 +64,7 @@
         <!-- Section 1: Status Text -->
         <section id="listening-status-text" class="listening-status-text mb-4">
           <h2 class="fw-light">Listening…</h2>
+          <h5 id="timer"></h5>
           <p class="text-muted mb-0">Microphone is active — awaiting input</p>
         </section>
 
@@ -69,7 +75,7 @@
 
         <!-- Section 3: Live STT Transcript -->
         <section id="listening-transcript" class="listening-transcript">
-          <!-- live transcript will appear here -->
+          <!-- live transcript will appear here, one line per speaker -->
           <p id="live-transcription-1"></p>
           <p id="live-transcription-2"></p>
           <p id="live-transcription-3"></p>
@@ -83,5 +89,23 @@
 
     </div>
 
+    <!-- ===== Settings modal ===== -->
+    <div id="settings-modal"></div>
+
+    <!-- ===== Learn More modal ===== -->
+    <div id="learm-more-modal">
+    </div>
+
+    <!-- ===== Notices & Disclosures modal ===== -->
+    <div id="notices-modal">
+    </div>
+
+    <!-- Bottom bar (injected by common.js) -->
+    <div id="app-footer">
+      
+    </div>
+
+  <!-- Bootstrap JS bundle (needed for modals in footer) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>

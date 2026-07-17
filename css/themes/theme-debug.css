@@ -1,0 +1,26 @@
+/* ============================================================
+   Rights Guardian — Debug theme  (dev only)
+
+   Overlay driven by the `debug` body class, toggled by the
+   #debug-toggle button in listening.html. Load this LAST so it
+   wins over whatever theme is active when debug is switched on.
+
+       <body class="listening-page debug">
+   ============================================================ */
+
+body.debug {
+  --bg-page: #ffd43b;
+  --bg-breathing: #a1887f;
+  --circle-bg-outer: rgba(135, 206, 235, 0.5);
+  --circle-border-outer: #4fc3f7;
+  --circle-bg-inner: rgba(135, 206, 235, 0.65);
+  --circle-border-inner: #4fc3f7;
+  --bg-status-text: #ce93d8;
+  --bg-waveform: #f48fb1;
+  --bg-transcript: #ef5350;
+  --bg-notifications: #b39ddb;
+  --bg-notification-item: #d1c4e9;
+  --bg-notif-btn: #6a1b9a;
+  --bg-notif-badge: #ff1744;
+  --section-border: 2px dashed #333;
+}

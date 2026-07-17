@@ -1,0 +1,184 @@
+/* ============================================================
+   Rights Guardian — "Brass & Ink" theme  (DEFAULT)
+
+   Mirrors the original index-page identity (css/styles.css).
+   Everything visual is driven by CSS variables on :root, so other
+   themes (e.g. debug) can override the look by re-defining vars —
+   nothing here paints a hardcoded background that a theme swap
+   can't reach.
+
+   config.js handles theme selection later; the default resolves
+   with no body class. `body.theme-brass-ink` is a named handle if
+   config wants to set it explicitly.
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&family=Hanken+Grotesk:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+
+/* ---------- palette + semantic mapping (default, on :root) ---------- */
+:root,
+body.theme-brass-ink {
+  /* source palette (mirrors styles.css) */
+  --ink-900: #090e17;
+  --ink-800: #0d1422;
+  --ink-700: #121b2d;
+  --panel:   #131d31;
+  --line:    #26324a;
+
+  --brass:        #c8a35c;
+  --brass-bright: #e8ca84;
+  --brass-dim:    rgba(200, 163, 92, 0.16);
+
+  --parchment: #ece4d3;
+  --muted:     #8a94a8;
+
+  --ember:      #d75c4d;
+  --ember-soft: rgba(215, 92, 77, 0.28);
+
+  --font-display: 'Libre Caslon Display', Georgia, serif;
+  --font-ui: 'Hanken Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'DM Mono', ui-monospace, monospace;
+
+  /* page-level (consumed by body.listening-page in listening.css) */
+  --text-body: var(--parchment);
+  --bg-page: var(--ink-900);
+  --bg-page-image:
+    radial-gradient(115% 78% at 50% 34%, rgba(200, 163, 92, 0.10) 0%, rgba(200, 163, 92, 0) 55%),
+    radial-gradient(140% 120% at 50% 120%, rgba(9, 14, 23, 0) 30%, rgba(4, 7, 12, 0.9) 100%),
+    linear-gradient(180deg, var(--ink-800) 0%, var(--ink-900) 100%);
+
+  /* listening-page semantic slots */
+  --bg-breathing:         transparent;
+  --circle-bg-outer:      var(--brass-dim);
+  --circle-border-outer:  rgba(200, 163, 92, 0.55);
+  --circle-bg-inner:      rgba(200, 163, 92, 0.10);
+  --circle-border-inner:  var(--brass);
+  --bg-status-text:       transparent;
+  --bg-waveform:          rgba(19, 29, 49, 0.45);
+  --bg-transcript:        rgba(19, 29, 49, 0.45);
+  --bg-notifications:     transparent;
+  --bg-notification-item: var(--panel);
+  --bg-notif-btn:         var(--brass);
+  --bg-notif-badge:       var(--ember);
+  --section-border:       1px solid var(--line);
+}
+
+/* ---------- listening-page identity (default look) ---------- */
+.listening-status-text h2 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--parchment);
+}
+#timer {
+  font-family: var(--font-mono);
+  color: var(--brass-bright);
+}
+.listening-status-text .text-muted { color: var(--muted); }
+.notification-title { color: var(--brass-bright); }
+.notification-text  { color: var(--parchment); opacity: .8; }
+
+/* guardian emblem inside the breathing medallion (delete for bare circles) */
+.listening-breathing::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 82px;
+  height: 82px;
+  background: url('../icons/guardian.png') center / contain no-repeat;
+  filter: drop-shadow(0 3px 10px rgba(0, 0, 0, .5));
+  pointer-events: none;
+  z-index: 2;
+}
+.listening-breathing .circle-outer {
+  box-shadow: 0 0 34px rgba(200, 163, 92, 0.20), inset 0 0 22px rgba(200, 163, 92, 0.10);
+}
+.listening-breathing .circle-inner {
+  box-shadow: 0 0 18px rgba(200, 163, 92, 0.26);
+}
+
+/* ============================================================
+   Shared chrome — bottom bar + modals injected by common.js.
+   These live only in styles.css (index), so any page that loads
+   this theme instead of styles.css was rendering them unstyled.
+   Folded in here so the footer buttons / modals match everywhere.
+   All colour comes from the variables above, so they re-theme too.
+   ============================================================ */
+.app-bottom {
+  border-top: 1px solid var(--brass-dim);
+  background: linear-gradient(180deg, rgba(200,163,92,0) 0%, rgba(11,16,26,.5) 100%);
+  padding: clamp(.7rem, 2vh, 1.05rem) clamp(.9rem, 4vw, 2.4rem)
+           calc(clamp(.7rem, 2vh, 1.05rem) + env(safe-area-inset-bottom));
+  animation: rise .9s cubic-bezier(.22,.68,.32,1) both;
+  animation-delay: .46s;
+}
+.bar-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font-family: var(--font-ui);
+  font-weight: 500;
+  font-size: clamp(.74rem, 1.9vw, .9rem);
+  letter-spacing: .02em;
+  white-space: nowrap;
+  padding: .5rem .35rem;
+  border-radius: .5rem;
+  cursor: pointer;
+  transition: color .22s ease, transform .22s ease;
+}
+.bar-btn i { font-size: 1.15em; color: var(--brass); transition: color .22s ease; }
+.bar-btn:hover,
+.bar-btn:focus-visible { color: var(--parchment); outline: none; }
+.bar-btn:hover i,
+.bar-btn:focus-visible i { color: var(--brass-bright); }
+.bar-btn:focus-visible { box-shadow: 0 0 0 2px var(--brass-dim); }
+.bar-btn.center { color: var(--parchment); }
+
+@media (max-width: 420px) {
+  .bar-btn .label-long { display: none; }
+}
+
+/* Bootstrap modal overrides */
+.modal-content.rg-modal {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  color: var(--parchment);
+  box-shadow: 0 24px 60px rgba(0,0,0,.55);
+}
+.rg-modal .modal-header,
+.rg-modal .modal-footer { border-color: var(--line); }
+.rg-modal .modal-title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  font-size: 1.25rem;
+  color: var(--brass-bright);
+}
+.rg-modal .btn-close { filter: invert(1) grayscale(1) brightness(1.4); opacity: .6; }
+.rg-modal .btn-close:hover { opacity: 1; }
+.rg-modal p { color: var(--muted); line-height: 1.6; }
+.rg-modal strong { color: var(--parchment); }
+.rg-modal .form-check-label { color: var(--parchment); }
+.rg-modal .form-check-input { background-color: var(--ink-700); border-color: var(--line); }
+.rg-modal .form-check-input:checked { background-color: var(--brass); border-color: var(--brass); }
+.rg-modal .form-check-input:focus { box-shadow: 0 0 0 .2rem var(--brass-dim); border-color: var(--brass); }
+.rg-btn-brass {
+  background: var(--brass);
+  color: var(--ink-900);
+  font-weight: 600;
+  border: 0;
+  letter-spacing: .02em;
+}
+.rg-btn-brass:hover { background: var(--brass-bright); color: var(--ink-900); }
+
+@keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .app-bottom { animation: none !important; opacity: 1 !important; transform: none !important; }
+}

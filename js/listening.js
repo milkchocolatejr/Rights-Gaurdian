@@ -14,7 +14,12 @@ class RelevantEvent {
 function toggleAnimation() {
   var el = document.getElementById('listening-breathing');
   if (el) {
-    el.classList.toggle('paused');
+    var wasPaused = el.classList.toggle('paused');
+    if (wasPaused) {
+      if (typeof stopRecording === 'function') stopRecording();
+    } else {
+      if (typeof startRecording === 'function') startRecording();
+    }
   }
 }
 
@@ -61,6 +66,25 @@ function pushReleventEvent(title, fullText, noteText) {
   var badge = document.querySelector('.notif-alert-badge');
   if (badge) badge.style.display = 'block';
 }
+
+/* On-screen transcript: latest final line per speaker → #live-transcription-N.
+   (Console logging of the same events lives in common.js.) */
+document.addEventListener('rg-transcript', (e) => {
+  const msg = e.detail;
+  if (msg.type !== 'transcript' || !msg.final) return;
+
+  for (const l of msg.lines) {
+    var textBox = document.getElementById('live-transcription-' + l.speaker);
+    if (!textBox) {
+      var section = document.getElementById('listening-transcript');
+      if (!section) continue;
+      textBox = document.createElement('p');
+      textBox.id = 'live-transcription-' + l.speaker;
+      section.appendChild(textBox);
+    }
+    textBox.textContent = 'Speaker ' + l.speaker + ': ' + l.text;
+  }
+});
 
 // Wire up static notification items on page load
 document.addEventListener('DOMContentLoaded', function() {
