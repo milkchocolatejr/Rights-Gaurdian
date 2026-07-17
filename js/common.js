@@ -104,8 +104,8 @@ const SETTINGS_MODAL = () => {
       +   '<label class="form-label" for="setTheme" style="color:var(--muted);font-size:.85rem">Theme</label>'
       +   `<select class="form-select" id="setTheme" style="background:var(--ink-700);border-color:var(--line);color:var(--parchment)">`
       +     Object.keys(THEMES).map(function(v) {
-      +       return '<option value="' + v + '" ' + (s.theme === v ? 'selected' : '') + '>' + THEMES[v] + '</option>';
-      +     }).join('')
+              return '<option value="' + v + '" ' + (s.theme === v ? 'selected' : '') + '>' + THEMES[v] + '</option>';
+            }).join('')
       +   '</select>'
       + '</div>'
       + '<div class="mb-2">'
