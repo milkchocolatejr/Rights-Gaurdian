@@ -1,0 +1,92 @@
+/* ============================================================
+   Rights Guardian — "State Farm" theme
+
+   Light theme built around State Farm red (#d81e35 family) on
+   soft warm off-whites. Text is dark slate on paper tones — high
+   contrast without pure-black-on-pure-white glare. Red is used
+   as an accent (borders, icons, titles, buttons), never as a
+   text-on-busy-background color.
+
+   Activate via Settings → Theme, which sets:
+       <body class="... theme-state-farm">
+
+   Load AFTER theme-brass-ink.css (whose :root block provides the
+   defaults + fonts) and BEFORE theme-debug.css.
+   ============================================================ */
+
+body.theme-state-farm {
+  /* source palette */
+  --ink-900: #ffffff;            /* consumed as text on red accent buttons */
+  --ink-800: #fbfaf7;
+  --ink-700: #f1efe9;            /* form control backgrounds */
+  --panel:   #ffffff;
+  --line:    #e2ddd3;
+
+  --brass:        #d81e35;       /* State Farm red — the accent slot */
+  --brass-bright: #a5122a;       /* "brighter" reads as deeper on light bg */
+  --brass-dim:    rgba(216, 30, 53, 0.14);
+
+  --parchment: #26282e;          /* primary text — dark slate, not pure black */
+  --muted:     #5c6069;          /* secondary text */
+
+  --ember:      #c2410c;         /* recording alert — burnt orange, distinct from accent red */
+  --ember-soft: rgba(194, 65, 12, 0.28);
+
+  /* page-level */
+  --text-body: var(--parchment);
+  --bg-page: #f6f4f1;
+  --bg-page-image:
+    radial-gradient(115% 78% at 50% 30%, rgba(216, 30, 53, 0.06) 0%, rgba(216, 30, 53, 0) 55%),
+    linear-gradient(180deg, #fbfaf8 0%, #f0ede7 100%);
+
+  /* index-page accents (consumed by css/styles.css) */
+  --accent-glow: rgba(216, 30, 53, 0.22);
+  --accent-ring: rgba(216, 30, 53, 0.45);
+  --accent-ring-soft: rgba(216, 30, 53, 0.30);
+  --medallion-face: radial-gradient(circle at 50% 38%, #ffffff 0%, #eeebe4 78%);
+  --footer-fade: linear-gradient(180deg, rgba(216, 30, 53, 0) 0%, rgba(216, 30, 53, 0.05) 100%);
+
+  /* listening-page semantic slots */
+  --bg-breathing:         transparent;
+  --circle-bg-outer:      rgba(216, 30, 53, 0.07);
+  --circle-border-outer:  rgba(216, 30, 53, 0.45);
+  --circle-bg-inner:      rgba(216, 30, 53, 0.05);
+  --circle-border-inner:  #d81e35;
+  --bg-status-text:       transparent;
+  --bg-waveform:          #ffffff;
+  --bg-transcript:        #ffffff;
+  --bg-notifications:     transparent;
+  --bg-notification-item: #ffffff;
+  --bg-notif-btn:         #d81e35;
+  --bg-notif-badge:       #a5122a;
+  --section-border:       1px solid var(--line);
+}
+
+/* ---------- decoration overrides ----------
+   theme-brass-ink.css paints a few brass glows / dark-bg filters
+   with literal colors; re-paint them for the light red theme. */
+
+body.theme-state-farm .listening-breathing .circle-outer {
+  box-shadow: 0 0 30px rgba(216, 30, 53, 0.12), inset 0 0 18px rgba(216, 30, 53, 0.05);
+}
+body.theme-state-farm .listening-breathing .circle-inner {
+  box-shadow: 0 0 16px rgba(216, 30, 53, 0.16);
+}
+
+body.theme-state-farm .app-bottom {
+  border-top: 1px solid var(--line);
+}
+
+/* dark close icon on white modals (brass-ink inverts it for dark bg) */
+body.theme-state-farm .rg-modal .btn-close {
+  filter: none;
+  opacity: .55;
+}
+body.theme-state-farm .modal-content.rg-modal {
+  box-shadow: 0 24px 60px rgba(40, 40, 50, 0.18);
+}
+
+/* red accent button keeps white text in both states */
+body.theme-state-farm .rg-btn-brass:hover {
+  color: #ffffff;
+}

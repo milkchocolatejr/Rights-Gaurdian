@@ -7,17 +7,29 @@
 
 body.listening-page {
   background-color: var(--bg-page);
+  background-image: var(--bg-page-image, none);
+  background-attachment: fixed;
   min-height: 100vh;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: var(--font-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
 }
 
 .listening-layout {
   display: flex;
   flex-direction: column;
+  align-items: center;
   width: 100%;
   min-width: 0;
-  padding: 3rem 2rem;
-  gap: 2rem;
+  min-height: 100vh;
+  padding: clamp(2rem, 5vh, 4rem) clamp(1rem, 5vw, 3rem);
+}
+
+/* Single centered column that grows to fill the viewport height. */
+.listening-main {
+  width: 100%;
+  max-width: 760px;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .listening-breathing-row {
@@ -125,8 +137,39 @@ body.listening-page {
 
 .listening-transcript {
   border: var(--section-border);
-  min-height: 150px; padding: 1rem; border-radius: 8px;
+  min-height: 150px; padding: 1.25rem; border-radius: 8px;
   background: var(--bg-transcript);
+  /* Grow to fill leftover height so the sections spread evenly and the
+     End button settles toward the bottom of the viewport. */
+  flex: 1 1 auto;
+}
+
+/* End-session button — same footprint as the section boxes above it */
+.end-session-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  width: 100%;
+  border: var(--section-border);
+  padding: 1rem;
+  border-radius: 8px;
+  background: var(--bg-transcript);
+  color: var(--text-body, inherit);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: filter .2s ease, transform .2s ease;
+}
+
+.end-session-btn:hover:not(:disabled) { filter: brightness(1.25); }
+.end-session-btn:disabled { opacity: 0.6; cursor: wait; }
+
+.end-session-error {
+  margin: 0.5rem 0 0;
+  font-size: 0.85rem;
+  color: var(--bg-notif-badge, #ef5350);
 }
 
 /* Notifications panel */
@@ -159,21 +202,36 @@ body.listening-page {
   opacity: 0.75;
 }
 
-/* Desktop (lg+): side-by-side layout */
+/* Larger screens: give the column more room and a taller transcript so
+   the page fills the viewport rather than clustering at the top. */
 @media (min-width: 992px) {
-  .listening-layout {
+  .listening-main {
+    max-width: 860px;
+  }
+
+  .listening-transcript {
+    min-height: 240px;
+  }
+}
+
+/* If the notifications panel is re-enabled it returns to a side column. */
+@media (min-width: 1200px) {
+  .listening-layout:has(.listening-notifications) {
     flex-direction: row;
     align-items: flex-start;
     justify-content: center;
+    gap: 2rem;
   }
-
-  .listening-main {
-    flex: 0 0 580px;
+  .listening-layout:has(.listening-notifications) .listening-main {
+    flex: 0 1 760px;
   }
-
   .listening-notifications {
-    flex: 0 0 500px;
+    flex: 0 0 460px;
     position: sticky;
     top: 2rem;
   }
+}
+
+p { 
+  color:#000;
 }
