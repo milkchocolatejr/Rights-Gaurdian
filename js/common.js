@@ -81,6 +81,7 @@ function getOrUpdateSettings(autoStart, keepDataLocal, hapticFeedback, theme, lo
 /* ===== Each modal is now just data ===== */
 const SETTINGS_MODAL = () => {
   const s = getOrUpdateSettings();
+  console.debug('[RightsGuardian] SETTINGS_MODAL rendering — localStorage theme:', localStorage.getItem('RightsGaurdian_theme'), '| parsed:', s.theme);
 
   return createModal({
     id: 'settingsModal',
@@ -227,7 +228,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* Apply saved theme and location */
   const saved = getOrUpdateSettings();
+  console.debug('[RightsGuardian] settings on load:', saved);
   document.body.classList.add(saved.theme);
+  console.debug('[RightsGuardian] theme applied:', saved.theme, '→ body classList:', document.body.className);
   if (saved.location) document.body.dataset.location = saved.location;
 });
 
@@ -249,9 +252,11 @@ document.addEventListener('change', (e) => {
 
   if (e.target.id === 'setTheme') {
     /* Swap body class: remove old theme, add new one */
+    console.debug('[RightsGuardian] theme change: from', document.body.className.match(/theme-[-a-z]+/)?.[0] || 'none', '→', e.target.value);
     document.body.classList.remove.apply(document.body.classList, Object.keys(THEMES));
     document.body.classList.add(e.target.value);
     getOrUpdateSettings(s.autoStart, s.keepDataLocal, s.hapticFeedback, e.target.value);
+    console.debug('[RightsGuardian] theme saved to localStorage:', localStorage.getItem('RightsGaurdian_theme'));
   }
 
   if (e.target.id === 'setLocation') {
