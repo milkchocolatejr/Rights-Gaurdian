@@ -29,6 +29,10 @@ const THEMES = {
   'theme-pretty-pink': 'Pretty Pink',
   'theme-black-blue': 'Black &amp; Blue',
   'theme-flaming-hot': 'Flaming Hot',
+  'theme-royalty': 'Royalty',
+  'theme-c-red-tv': 'C-Red-TV',
+  'theme-mint': 'Mint',
+  'theme-noir': 'Noir',
   'debug': 'Debug',
 };
 

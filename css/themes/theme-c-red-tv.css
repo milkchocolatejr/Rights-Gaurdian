@@ -1,0 +1,123 @@
+/* ============================================================
+   Rights Guardian — "C-Red-TV" theme  (CRT amber)
+
+   Retro CRT terminal with warm amber-phosphor glow. Near-black
+   background, reddish-amber text glow, like a vintage monitor.
+
+   Activates via:  <body class="theme-c-red-tv">
+   ============================================================ */
+
+body.theme-c-red-tv {
+  --ink-900: #0c0804;
+  --ink-800: #141006;
+  --ink-700: #1e180c;
+  --panel:   #1a140a;
+  --line:    #2e2614;
+
+  --brass:        #d47a30;
+  --brass-bright: #f0a050;
+  --brass-dim:    rgba(212, 122, 48, 0.16);
+
+  --parchment: #e8d4b0;
+  --muted:     #9a7a54;
+
+  --ember:      #c84a20;
+  --ember-soft: rgba(200, 74, 32, 0.25);
+
+  --text-body: var(--parchment);
+  --bg-page: var(--ink-900);
+  --bg-page-image: none;
+
+  --bg-breathing:         rgba(212, 122, 48, 0.06);
+  --circle-bg-outer:      rgba(212, 122, 48, 0.16);
+  --circle-border-outer:  rgba(212, 122, 48, 0.45);
+  --circle-bg-inner:      rgba(212, 122, 48, 0.24);
+  --circle-border-inner:  var(--brass);
+  --bg-status-text:       rgba(240, 160, 80, 0.03);
+  --bg-waveform:          rgba(26, 20, 10, 0.55);
+  --bg-transcript:        rgba(26, 20, 10, 0.55);
+  --bg-notifications:     transparent;
+  --bg-notification-item: var(--panel);
+  --bg-notif-btn:         var(--brass);
+  --bg-notif-badge:       var(--ember);
+  --section-border:       1px solid var(--line);
+}
+
+body.theme-c-red-tv.listening-page,
+body.theme-c-red-tv.rg-body {
+  background: #0c0804;
+}
+
+body.theme-c-red-tv .listening-breathing .circle-outer {
+  box-shadow: 0 0 34px rgba(212, 122, 48, 0.14), inset 0 0 22px rgba(212, 122, 48, 0.06);
+}
+body.theme-c-red-tv .listening-breathing .circle-inner {
+  box-shadow: 0 0 18px rgba(240, 160, 80, 0.18);
+}
+
+body.theme-c-red-tv .guardian::before {
+  background: radial-gradient(circle at 50% 38%, #221a0e 0%, #120e06 78%);
+  border: 1px solid rgba(212, 122, 48, 0.35);
+}
+body.theme-c-red-tv .guardian-ring {
+  border-color: rgba(212, 122, 48, 0.40);
+}
+body.theme-c-red-tv .guardian-glow {
+  background: radial-gradient(circle, rgba(212, 122, 48, 0.22) 0%, rgba(212, 122, 48, 0) 68%);
+}
+body.theme-c-red-tv .guardian-img {
+  filter: drop-shadow(0 4px 12px rgba(212, 122, 48, 0.22));
+}
+
+body.theme-c-red-tv .guardian.is-recording .guardian-ring {
+  border-color: var(--ember);
+  box-shadow: 0 0 16px rgba(200, 74, 32, 0.35);
+}
+body.theme-c-red-tv .guardian.is-recording .guardian-glow {
+  background: radial-gradient(circle, rgba(200, 74, 32, 0.40) 0%, rgba(200, 74, 32, 0) 68%);
+}
+body.theme-c-red-tv .guardian.is-recording .guardian-img {
+  filter: drop-shadow(0 0 16px rgba(200, 74, 32, 0.48));
+}
+
+/* ---- CRT scan-line effect on breathing circles ---- */
+body.theme-c-red-tv .listening-breathing::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 82px;
+  height: 82px;
+  background: url('../icons/guardian.png') center / contain no-repeat;
+  filter: drop-shadow(0 3px 10px rgba(0, 0, 0, 0.5)) brightness(1.1) sepia(0.6) saturate(2) hue-rotate(-10deg);
+  pointer-events: none;
+  z-index: 2;
+}
+
+body.theme-c-red-tv .listening-breathing .circle-outer,
+body.theme-c-red-tv .listening-breathing .circle-inner {
+  border-style: double;
+}
+
+body.theme-c-red-tv .app-bottom {
+  background: linear-gradient(180deg, rgba(212, 122, 48, 0) 0%, rgba(12, 8, 4, 0.7) 100%);
+}
+
+body.theme-c-red-tv .notif-alert-btn {
+  background: var(--brass);
+}
+
+body.theme-c-red-tv #timer {
+  color: var(--brass-bright);
+}
+
+/* ---- CRT amber tint on text ---- */
+body.theme-c-red-tv .listening-status-text h2,
+body.theme-c-red-tv .app-title,
+body.theme-c-red-tv .subtitle {
+  text-shadow: 0 0 6px rgba(212, 122, 48, 0.20);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.theme-c-red-tv .app-bottom { animation: none !important; opacity: 1 !important; transform: none !important; }
+}
