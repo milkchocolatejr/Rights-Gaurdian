@@ -3,5 +3,5 @@
 Deepgram : https://console.deepgram.com/project/8ba281f1-0e6b-4bae-83d6-9ead7936b7cf
 
 Generate an API key and add it to the a file named `.env`
-DEEPGRAM_API_KEY=f1be8513e4fede47b73fd4d7059413cb4428d2b8
+DEEPGRAM_API_KEY=<key>
 
