@@ -82,6 +82,14 @@ const SETTINGS_MODAL = () => {
       +   `<input class="form-check-input" type="checkbox" role="switch" id="setHaptics" ${s.hapticFeedback ? 'checked' : ''}>`
       +   '<label class="form-check-label" for="setHaptics">Vibrate when recording starts</label>'
       + '</div>'
+      + '<hr class="my-3" style="border-color:var(--line)">'
+      + '<div class="mb-2">'
+      +   '<label class="form-label" for="setTheme" style="color:var(--muted);font-size:.85rem">Theme</label>'
+      +   `<select class="form-select" id="setTheme" style="background:var(--ink-700);border-color:var(--line);color:var(--parchment)">`
+      +     `<option value="theme-brass-ink" ${s.theme === 'theme-brass-ink' ? 'selected' : ''}>Brass &amp; Ink</option>`
+      +     `<option value="debug" ${s.theme === 'debug' ? 'selected' : ''}>Debug</option>`
+      +   '</select>'
+      + '</div>'
   });
 }
 
@@ -141,17 +149,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const noticesEl = document.getElementById('notices-modal');
   if (noticesEl) noticesEl.innerHTML = NOTICES_MODAL;
+
+  /* Apply saved theme */
+  const saved = getOrUpdateSettings();
+  document.body.classList.add(saved.theme);
 });
 
-/* Auto-save settings when any toggle in the settings modal changes */
+/* Auto-save settings when controls in the settings modal change */
 document.addEventListener('change', (e) => {
-  if (!e.target.matches('#settingsModal .form-check-input')) return;
+  if (!e.target.closest('#settingsModal')) return;
 
   const s = getOrUpdateSettings();
-  const checked = e.target.checked;
-  switch (e.target.id) {
-    case 'setAutoStart':    getOrUpdateSettings(checked, s.keepDataLocal, s.hapticFeedback, s.theme); break;
-    case 'setKeepLocal':    getOrUpdateSettings(s.autoStart, checked, s.hapticFeedback, s.theme); break;
-    case 'setHaptics':      getOrUpdateSettings(s.autoStart, s.keepDataLocal, checked, s.theme); break;
+
+  if (e.target.matches('.form-check-input')) {
+    const checked = e.target.checked;
+    switch (e.target.id) {
+      case 'setAutoStart': getOrUpdateSettings(checked, s.keepDataLocal, s.hapticFeedback, s.theme); break;
+      case 'setKeepLocal': getOrUpdateSettings(s.autoStart, checked, s.hapticFeedback, s.theme); break;
+      case 'setHaptics':   getOrUpdateSettings(s.autoStart, s.keepDataLocal, checked, s.theme); break;
+    }
+    return;
+  }
+
+  if (e.target.id === 'setTheme') {
+    /* Swap body class: remove old theme, add new one */
+    document.body.classList.remove('theme-brass-ink', 'debug');
+    document.body.classList.add(e.target.value);
+    getOrUpdateSettings(s.autoStart, s.keepDataLocal, s.hapticFeedback, e.target.value);
   }
 });
