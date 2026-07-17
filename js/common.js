@@ -39,14 +39,15 @@ function createModal({ id, title, body, closeLabel = 'Close', scrollable = false
     + '</div>';
 }
 
-function getOrUpdateSettings(autoStart, keepDataLocal, hapticFeedback, theme) {
+function getOrUpdateSettings(autoStart, keepDataLocal, hapticFeedback, theme, location) {
   /* Read mode: no args / all null — return current values from localStorage */
   if (autoStart == null) {
     return {
       autoStart: localStorage.getItem(LOCALSTORAGE_AUTOSTART) === 'true',
       keepDataLocal: localStorage.getItem(LOCALSTORAGE_KEEPDATALOCAL) !== 'false',
       hapticFeedback: localStorage.getItem(LOCALSTORAGE_SETHAPTICS) !== 'false',
-      theme: localStorage.getItem(LOCALSTORAGE_THEME) || 'theme-brass-ink'
+      theme: localStorage.getItem(LOCALSTORAGE_THEME) || 'theme-brass-ink',
+      location: localStorage.getItem(LOCALSTORAGE_LOCATION) || ''
     };
   }
 
@@ -55,8 +56,9 @@ function getOrUpdateSettings(autoStart, keepDataLocal, hapticFeedback, theme) {
   localStorage.setItem(LOCALSTORAGE_KEEPDATALOCAL, String(!!keepDataLocal));
   localStorage.setItem(LOCALSTORAGE_SETHAPTICS, String(!!hapticFeedback));
   if (theme) localStorage.setItem(LOCALSTORAGE_THEME, theme);
+  if (location !== undefined) localStorage.setItem(LOCALSTORAGE_LOCATION, location);
 
-  return { autoStart, keepDataLocal, hapticFeedback, theme };
+  return { autoStart, keepDataLocal, hapticFeedback, theme, location };
 }
 
 /* ===== Each modal is now just data ===== */
@@ -86,6 +88,63 @@ const SETTINGS_MODAL = () => {
       +   `<select class="form-select" id="setTheme" style="background:var(--ink-700);border-color:var(--line);color:var(--parchment)">`
       +     `<option value="theme-brass-ink" ${s.theme === 'theme-brass-ink' ? 'selected' : ''}>Brass &amp; Ink</option>`
       +     `<option value="debug" ${s.theme === 'debug' ? 'selected' : ''}>Debug</option>`
+      +   '</select>'
+      + '</div>'
+      + '<div class="mb-2">'
+      +   '<label class="form-label" for="setLocation" style="color:var(--muted);font-size:.85rem">Location</label>'
+      +   `<select class="form-select" id="setLocation" style="background:var(--ink-700);border-color:var(--line);color:var(--parchment)">`
+      +     `<option value="" ${s.location === '' ? 'selected' : ''}>— Select a location —</option>`
+      +     `<option value="AL" ${s.location === 'AL' ? 'selected' : ''}>Alabama</option>`
+      +     `<option value="AK" ${s.location === 'AK' ? 'selected' : ''}>Alaska</option>`
+      +     `<option value="AZ" ${s.location === 'AZ' ? 'selected' : ''}>Arizona</option>`
+      +     `<option value="AR" ${s.location === 'AR' ? 'selected' : ''}>Arkansas</option>`
+      +     `<option value="CA" ${s.location === 'CA' ? 'selected' : ''}>California</option>`
+      +     `<option value="CO" ${s.location === 'CO' ? 'selected' : ''}>Colorado</option>`
+      +     `<option value="CT" ${s.location === 'CT' ? 'selected' : ''}>Connecticut</option>`
+      +     `<option value="DE" ${s.location === 'DE' ? 'selected' : ''}>Delaware</option>`
+      +     `<option value="DC" ${s.location === 'DC' ? 'selected' : ''}>District of Columbia</option>`
+      +     `<option value="FL" ${s.location === 'FL' ? 'selected' : ''}>Florida</option>`
+      +     `<option value="GA" ${s.location === 'GA' ? 'selected' : ''}>Georgia</option>`
+      +     `<option value="HI" ${s.location === 'HI' ? 'selected' : ''}>Hawaii</option>`
+      +     `<option value="ID" ${s.location === 'ID' ? 'selected' : ''}>Idaho</option>`
+      +     `<option value="IL" ${s.location === 'IL' ? 'selected' : ''}>Illinois</option>`
+      +     `<option value="IN" ${s.location === 'IN' ? 'selected' : ''}>Indiana</option>`
+      +     `<option value="IA" ${s.location === 'IA' ? 'selected' : ''}>Iowa</option>`
+      +     `<option value="KS" ${s.location === 'KS' ? 'selected' : ''}>Kansas</option>`
+      +     `<option value="KY" ${s.location === 'KY' ? 'selected' : ''}>Kentucky</option>`
+      +     `<option value="LA" ${s.location === 'LA' ? 'selected' : ''}>Louisiana</option>`
+      +     `<option value="ME" ${s.location === 'ME' ? 'selected' : ''}>Maine</option>`
+      +     `<option value="MD" ${s.location === 'MD' ? 'selected' : ''}>Maryland</option>`
+      +     `<option value="MA" ${s.location === 'MA' ? 'selected' : ''}>Massachusetts</option>`
+      +     `<option value="MI" ${s.location === 'MI' ? 'selected' : ''}>Michigan</option>`
+      +     `<option value="MN" ${s.location === 'MN' ? 'selected' : ''}>Minnesota</option>`
+      +     `<option value="MS" ${s.location === 'MS' ? 'selected' : ''}>Mississippi</option>`
+      +     `<option value="MO" ${s.location === 'MO' ? 'selected' : ''}>Missouri</option>`
+      +     `<option value="MT" ${s.location === 'MT' ? 'selected' : ''}>Montana</option>`
+      +     `<option value="NE" ${s.location === 'NE' ? 'selected' : ''}>Nebraska</option>`
+      +     `<option value="NV" ${s.location === 'NV' ? 'selected' : ''}>Nevada</option>`
+      +     `<option value="NH" ${s.location === 'NH' ? 'selected' : ''}>New Hampshire</option>`
+      +     `<option value="NJ" ${s.location === 'NJ' ? 'selected' : ''}>New Jersey</option>`
+      +     `<option value="NM" ${s.location === 'NM' ? 'selected' : ''}>New Mexico</option>`
+      +     `<option value="NY" ${s.location === 'NY' ? 'selected' : ''}>New York</option>`
+      +     `<option value="NC" ${s.location === 'NC' ? 'selected' : ''}>North Carolina</option>`
+      +     `<option value="ND" ${s.location === 'ND' ? 'selected' : ''}>North Dakota</option>`
+      +     `<option value="OH" ${s.location === 'OH' ? 'selected' : ''}>Ohio</option>`
+      +     `<option value="OK" ${s.location === 'OK' ? 'selected' : ''}>Oklahoma</option>`
+      +     `<option value="OR" ${s.location === 'OR' ? 'selected' : ''}>Oregon</option>`
+      +     `<option value="PA" ${s.location === 'PA' ? 'selected' : ''}>Pennsylvania</option>`
+      +     `<option value="RI" ${s.location === 'RI' ? 'selected' : ''}>Rhode Island</option>`
+      +     `<option value="SC" ${s.location === 'SC' ? 'selected' : ''}>South Carolina</option>`
+      +     `<option value="SD" ${s.location === 'SD' ? 'selected' : ''}>South Dakota</option>`
+      +     `<option value="TN" ${s.location === 'TN' ? 'selected' : ''}>Tennessee</option>`
+      +     `<option value="TX" ${s.location === 'TX' ? 'selected' : ''}>Texas</option>`
+      +     `<option value="UT" ${s.location === 'UT' ? 'selected' : ''}>Utah</option>`
+      +     `<option value="VT" ${s.location === 'VT' ? 'selected' : ''}>Vermont</option>`
+      +     `<option value="VA" ${s.location === 'VA' ? 'selected' : ''}>Virginia</option>`
+      +     `<option value="WA" ${s.location === 'WA' ? 'selected' : ''}>Washington</option>`
+      +     `<option value="WV" ${s.location === 'WV' ? 'selected' : ''}>West Virginia</option>`
+      +     `<option value="WI" ${s.location === 'WI' ? 'selected' : ''}>Wisconsin</option>`
+      +     `<option value="WY" ${s.location === 'WY' ? 'selected' : ''}>Wyoming</option>`
       +   '</select>'
       + '</div>'
   });
@@ -148,9 +207,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const noticesEl = document.getElementById('notices-modal');
   if (noticesEl) noticesEl.innerHTML = NOTICES_MODAL;
 
-  /* Apply saved theme */
+  /* Apply saved theme and location */
   const saved = getOrUpdateSettings();
   document.body.classList.add(saved.theme);
+  if (saved.location) document.body.dataset.location = saved.location;
 });
 
 /* Auto-save settings when controls in the settings modal change */
@@ -174,5 +234,11 @@ document.addEventListener('change', (e) => {
     document.body.classList.remove('theme-brass-ink', 'debug');
     document.body.classList.add(e.target.value);
     getOrUpdateSettings(s.autoStart, s.keepDataLocal, s.hapticFeedback, e.target.value);
+  }
+
+  if (e.target.id === 'setLocation') {
+    const loc = e.target.value;
+    document.body.dataset.location = loc || '';
+    getOrUpdateSettings(s.autoStart, s.keepDataLocal, s.hapticFeedback, s.theme, loc);
   }
 });
