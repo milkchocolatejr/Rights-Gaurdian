@@ -15,6 +15,7 @@ function toggleRecording() {
   var el = document.getElementById('listening-breathing');
   if (el) {
     var wasPaused = el.classList.toggle('paused');
+    el.dataset.state = wasPaused ? 'paused' : 'recording';
     if (wasPaused) {
       if (typeof stopRecording === 'function') stopRecording();
     } else {
@@ -32,6 +33,7 @@ function handleNotifClick(e) {
   var id = item.getAttribute('data-id');
   if (id && releventEvents[id]) {
     releventEvents[id].metadata.seen = true;
+    item.dataset.seen = 'true';
   }
 
   if (allSeen()) {
@@ -56,12 +58,15 @@ function pushReleventEvent(title, fullText, noteText) {
     var div = document.createElement('div');
     div.className = 'notification-item';
     div.setAttribute('data-id', id);
+    div.dataset.seen = 'false';
     div.innerHTML =
       '<h3 class="notification-title">' + title + '</h3>' +
       '<p class="notification-text">' + noteText + '</p>';
     div.addEventListener('click', handleNotifClick);
     panel.insertAdjacentElement('afterbegin', div);
   }
+
+  if (panel) panel.dataset.count = Object.keys(releventEvents).length;
 
   var badge = document.querySelector('.notif-alert-badge');
   if (badge) badge.style.display = 'block';
@@ -88,6 +93,10 @@ document.addEventListener('rg-transcript', (e) => {
 
 // Wire up static notification items on page load
 document.addEventListener('DOMContentLoaded', function() {
+  /* Init state attr on breathing element for debug theme */
+  var breathingEl = document.getElementById('listening-breathing');
+  if (breathingEl) breathingEl.dataset.state = breathingEl.classList.contains('paused') ? 'paused' : 'idle';
+
   var items = document.querySelectorAll('.notification-item');
   for (var i = 0; i < items.length; i++) {
     var item = items[i];
@@ -102,6 +111,7 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     }
 
+    item.dataset.seen = item.dataset.seen || 'false';
     item.addEventListener('click', handleNotifClick);
   }
 });

@@ -1,0 +1,77 @@
+/* ============================================================
+   Rights Guardian — "Dark" theme  (cool blue-slate)
+
+   A modern dark theme with indigo-blue accents instead of
+   brass-ink's warm gold. Deep slate backgrounds, cool-gray
+   text, blue highlights.
+
+   Activates via:  <body class="theme-dark">
+   Load after theme-brass-ink.css so variables override :root.
+   ============================================================ */
+
+/* ---------- palette + semantic mapping ---------- */
+body.theme-dark {
+  --ink-900: #0c0e14;
+  --ink-800: #11141e;
+  --ink-700: #181c2a;
+  --panel:   #161b28;
+  --line:    #262d42;
+
+  --brass:        #6b8cff;
+  --brass-bright: #8faaff;
+  --brass-dim:    rgba(107, 140, 255, 0.14);
+
+  --parchment: #dfe6f0;
+  --muted:     #7a85a0;
+
+  --ember:      #ff6b6b;
+  --ember-soft: rgba(255, 107, 107, 0.22);
+
+  /* page-level (consumed by listening.css) */
+  --text-body: var(--parchment);
+  --bg-page: var(--ink-900);
+  --bg-page-image: none;
+
+  /* listening-page semantic slots */
+  --bg-breathing:         rgba(107, 140, 255, 0.05);
+  --circle-bg-outer:      rgba(107, 140, 255, 0.14);
+  --circle-border-outer:  rgba(107, 140, 255, 0.40);
+  --circle-bg-inner:      rgba(107, 140, 255, 0.22);
+  --circle-border-inner:  var(--brass);
+  --bg-status-text:       transparent;
+  --bg-waveform:          rgba(24, 28, 42, 0.50);
+  --bg-transcript:        rgba(24, 28, 42, 0.50);
+  --bg-notifications:     transparent;
+  --bg-notification-item: var(--panel);
+  --bg-notif-btn:         var(--brass);
+  --bg-notif-badge:       var(--ember);
+  --section-border:       1px solid var(--line);
+}
+
+/* ---------- page background ---------- */
+body.theme-dark.listening-page {
+  background: linear-gradient(180deg, #11141e 0%, #0c0e14 100%);
+}
+
+body.theme-dark.rg-body {
+  background: linear-gradient(180deg, #11141e 0%, #0c0e14 100%);
+}
+
+/* ---------- breathing circles (blue glow instead of gold) ---------- */
+body.theme-dark .listening-breathing .circle-outer {
+  box-shadow: 0 0 34px rgba(107, 140, 255, 0.12), inset 0 0 22px rgba(107, 140, 255, 0.06);
+}
+
+body.theme-dark .listening-breathing .circle-inner {
+  box-shadow: 0 0 18px rgba(107, 140, 255, 0.18);
+}
+
+/* ---------- bottom bar override (dark slate gradient) ---------- */
+body.theme-dark .app-bottom {
+  background: linear-gradient(180deg, rgba(107, 140, 255, 0) 0%, rgba(12, 14, 20, 0.6) 100%);
+}
+
+/* ---------- reduced-motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  body.theme-dark .app-bottom { animation: none !important; opacity: 1 !important; transform: none !important; }
+}

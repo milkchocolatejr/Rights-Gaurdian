@@ -1,0 +1,116 @@
+/* ============================================================
+   Rights Guardian — "Blood & Iron" theme  (gritty dark)
+
+   Grim, industrial dark theme. Near-black steel backgrounds,
+   crimson blood accents, iron-gray secondary. The brass role
+   is repurposed as cold steel; ember is hot blood.
+
+   Activates via:  <body class="theme-blood-iron">
+   Load after theme-brass-ink.css so variables override :root.
+   ============================================================ */
+
+/* ---------- palette + semantic mapping ---------- */
+body.theme-blood-iron {
+  --ink-900: #08080c;
+  --ink-800: #0f0f15;
+  --ink-700: #181820;
+  --panel:   #14141c;
+  --line:    #2a2a38;
+
+  --brass:        #8a8a9a;
+  --brass-bright: #b0b0be;
+  --brass-dim:    rgba(138, 138, 154, 0.14);
+
+  --parchment: #d6d2cc;
+  --muted:     #6e6e80;
+
+  --ember:      #c62828;
+  --ember-soft: rgba(198, 40, 40, 0.25);
+
+  /* page-level (consumed by listening.css) */
+  --text-body: var(--parchment);
+  --bg-page: var(--ink-900);
+  --bg-page-image: none;
+
+  /* listening-page semantic slots */
+  --bg-breathing:         rgba(198, 40, 40, 0.04);
+  --circle-bg-outer:      rgba(198, 40, 40, 0.12);
+  --circle-border-outer:  rgba(198, 40, 40, 0.35);
+  --circle-bg-inner:      rgba(198, 40, 40, 0.20);
+  --circle-border-inner:  var(--ember);
+  --bg-status-text:       transparent;
+  --bg-waveform:          rgba(20, 20, 28, 0.55);
+  --bg-transcript:        rgba(20, 20, 28, 0.55);
+  --bg-notifications:     transparent;
+  --bg-notification-item: var(--panel);
+  --bg-notif-btn:         var(--ember);
+  --bg-notif-badge:       var(--ember);
+  --section-border:       1px solid var(--line);
+}
+
+/* ---------- page background ---------- */
+body.theme-blood-iron.listening-page,
+body.theme-blood-iron.rg-body {
+  background: linear-gradient(180deg, #0f0f15 0%, #08080c 100%);
+}
+
+/* ---------- breathing circles (blood-red glow) ---------- */
+body.theme-blood-iron .listening-breathing .circle-outer {
+  box-shadow: 0 0 34px rgba(198, 40, 40, 0.10), inset 0 0 22px rgba(198, 40, 40, 0.05);
+}
+
+body.theme-blood-iron .listening-breathing .circle-inner {
+  box-shadow: 0 0 18px rgba(198, 40, 40, 0.16);
+}
+
+/* ---------- guardian medallion (iron disc, blood ring) ---------- */
+body.theme-blood-iron .guardian::before {
+  background: radial-gradient(circle at 50% 38%, #1e1e28 0%, #12121a 78%);
+  border: 1px solid rgba(138, 138, 154, 0.30);
+}
+
+body.theme-blood-iron .guardian-ring {
+  border-color: rgba(138, 138, 154, 0.35);
+}
+
+body.theme-blood-iron .guardian-glow {
+  background: radial-gradient(circle, rgba(198, 40, 40, 0.18) 0%, rgba(198, 40, 40, 0) 68%);
+}
+
+body.theme-blood-iron .guardian-img {
+  filter: drop-shadow(0 4px 12px rgba(198, 40, 40, 0.15));
+}
+
+/* ----- guardian recording state ----- */
+body.theme-blood-iron .guardian.is-recording .guardian-ring {
+  border-color: #ef5350;
+  box-shadow: 0 0 14px rgba(198, 40, 40, 0.30);
+}
+
+body.theme-blood-iron .guardian.is-recording .guardian-glow {
+  background: radial-gradient(circle, rgba(198, 40, 40, 0.35) 0%, rgba(198, 40, 40, 0) 68%);
+}
+
+body.theme-blood-iron .guardian.is-recording .guardian-img {
+  filter: drop-shadow(0 0 14px rgba(198, 40, 40, 0.40));
+}
+
+/* ---------- bottom bar ---------- */
+body.theme-blood-iron .app-bottom {
+  background: linear-gradient(180deg, rgba(198, 40, 40, 0) 0%, rgba(8, 8, 12, 0.6) 100%);
+}
+
+/* ---------- notification button (blood red) ---------- */
+body.theme-blood-iron .notif-alert-btn {
+  background: var(--ember);
+}
+
+/* ---------- timer ---------- */
+body.theme-blood-iron #timer {
+  color: var(--ember);
+}
+
+/* ---------- reduced-motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  body.theme-blood-iron .app-bottom { animation: none !important; opacity: 1 !important; transform: none !important; }
+}

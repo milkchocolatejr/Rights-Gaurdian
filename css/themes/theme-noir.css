@@ -1,0 +1,99 @@
+/* ============================================================
+   Rights Guardian — "Noir" theme  (B&W monochrome)
+
+   Pure grayscale film-noir aesthetic. Black backgrounds, white
+   text, every accent is a shade of gray. No color anywhere —
+   stark, dramatic, detective-vibe.
+
+   Activates via:  <body class="theme-noir">
+   ============================================================ */
+
+body.theme-noir {
+  --ink-900: #050505;
+  --ink-800: #0c0c0c;
+  --ink-700: #141414;
+  --panel:   #101010;
+  --line:    #222222;
+
+  --brass:        #999999;
+  --brass-bright: #cccccc;
+  --brass-dim:    rgba(255, 255, 255, 0.08);
+
+  --parchment: #e0e0e0;
+  --muted:     #666666;
+
+  --ember:      #888888;
+  --ember-soft: rgba(255, 255, 255, 0.10);
+
+  --text-body: var(--parchment);
+  --bg-page: var(--ink-900);
+  --bg-page-image: none;
+
+  --bg-breathing:         rgba(255, 255, 255, 0.03);
+  --circle-bg-outer:      rgba(255, 255, 255, 0.06);
+  --circle-border-outer:  rgba(255, 255, 255, 0.18);
+  --circle-bg-inner:      rgba(255, 255, 255, 0.10);
+  --circle-border-inner:  var(--brass);
+  --bg-status-text:       transparent;
+  --bg-waveform:          rgba(20, 20, 20, 0.55);
+  --bg-transcript:        rgba(20, 20, 20, 0.55);
+  --bg-notifications:     transparent;
+  --bg-notification-item: var(--panel);
+  --bg-notif-btn:         var(--brass);
+  --bg-notif-badge:       var(--ember);
+  --section-border:       1px solid var(--line);
+}
+
+body.theme-noir.listening-page,
+body.theme-noir.rg-body {
+  background: #050505;
+}
+
+body.theme-noir .listening-breathing .circle-outer {
+  box-shadow: 0 0 34px rgba(255, 255, 255, 0.04), inset 0 0 22px rgba(255, 255, 255, 0.02);
+}
+body.theme-noir .listening-breathing .circle-inner {
+  box-shadow: 0 0 18px rgba(255, 255, 255, 0.06);
+}
+
+body.theme-noir .guardian::before {
+  background: radial-gradient(circle at 50% 38%, #181818 0%, #0a0a0a 78%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+body.theme-noir .guardian-ring {
+  border-color: rgba(255, 255, 255, 0.15);
+}
+body.theme-noir .guardian-glow {
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0) 68%);
+}
+body.theme-noir .guardian-img {
+  filter: drop-shadow(0 4px 12px rgba(255, 255, 255, 0.04)) grayscale(1);
+}
+
+body.theme-noir .guardian.is-recording .guardian-ring {
+  border-color: var(--ember);
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.08);
+}
+body.theme-noir .guardian.is-recording .guardian-glow {
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 68%);
+}
+body.theme-noir .guardian.is-recording .guardian-img {
+  filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.08)) grayscale(1);
+}
+
+body.theme-noir .app-bottom {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(5, 5, 5, 0.7) 100%);
+}
+
+body.theme-noir .notif-alert-btn {
+  background: #333333;
+  border-color: #555555;
+}
+
+body.theme-noir #timer {
+  color: var(--brass-bright);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.theme-noir .app-bottom { animation: none !important; opacity: 1 !important; transform: none !important; }
+}

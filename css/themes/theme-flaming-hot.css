@@ -1,0 +1,108 @@
+/* ============================================================
+   Rights Guardian — "Flaming Hot" theme  (fire dark)
+
+   Intense fire-inspired dark theme. Deep ember/smoke backgrounds,
+   blazing orange and yellow accents, hot red recording state.
+
+   Activates via:  <body class="theme-flaming-hot">
+   ============================================================ */
+
+body.theme-flaming-hot {
+  --ink-900: #120a06;
+  --ink-800: #1c1008;
+  --ink-700: #2a180e;
+  --panel:   #24140c;
+  --line:    #3d2416;
+
+  --brass:        #ff8a3d;
+  --brass-bright: #ffb74d;
+  --brass-dim:    rgba(255, 138, 61, 0.15);
+
+  --parchment: #f5e8d8;
+  --muted:     #a08068;
+
+  --ember:      #ff2d00;
+  --ember-soft: rgba(255, 45, 0, 0.28);
+
+  --text-body: var(--parchment);
+  --bg-page: var(--ink-900);
+  --bg-page-image: none;
+
+  --bg-breathing:         rgba(255, 138, 61, 0.05);
+  --circle-bg-outer:      rgba(255, 138, 61, 0.14);
+  --circle-border-outer:  rgba(255, 138, 61, 0.40);
+  --circle-bg-inner:      rgba(255, 138, 61, 0.22);
+  --circle-border-inner:  var(--brass);
+  --bg-status-text:       transparent;
+  --bg-waveform:          rgba(36, 20, 12, 0.55);
+  --bg-transcript:        rgba(36, 20, 12, 0.55);
+  --bg-notifications:     transparent;
+  --bg-notification-item: var(--panel);
+  --bg-notif-btn:         var(--ember);
+  --bg-notif-badge:       var(--ember);
+  --section-border:       1px solid var(--line);
+}
+
+body.theme-flaming-hot.listening-page,
+body.theme-flaming-hot.rg-body {
+  background: linear-gradient(180deg, #1c1008 0%, #120a06 100%);
+}
+
+/* ---- breathing circles: orange/yellow fire glow ---- */
+body.theme-flaming-hot .listening-breathing .circle-outer {
+  box-shadow: 0 0 34px rgba(255, 138, 61, 0.14), inset 0 0 22px rgba(255, 138, 61, 0.06);
+}
+body.theme-flaming-hot .listening-breathing .circle-inner {
+  box-shadow: 0 0 18px rgba(255, 183, 77, 0.20);
+}
+
+/* ---- guardian: ember disc, flame ring ---- */
+body.theme-flaming-hot .guardian::before {
+  background: radial-gradient(circle at 50% 38%, #2e1a0e 0%, #1a0e06 78%);
+  border: 1px solid rgba(255, 138, 61, 0.30);
+}
+body.theme-flaming-hot .guardian-ring {
+  border-color: rgba(255, 138, 61, 0.38);
+}
+body.theme-flaming-hot .guardian-glow {
+  background: radial-gradient(circle, rgba(255, 138, 61, 0.22) 0%, rgba(255, 138, 61, 0) 68%);
+}
+body.theme-flaming-hot .guardian-img {
+  filter: drop-shadow(0 4px 12px rgba(255, 138, 61, 0.20));
+}
+
+/* recording → hot red */
+body.theme-flaming-hot .guardian.is-recording .guardian-ring {
+  border-color: var(--ember);
+  box-shadow: 0 0 16px rgba(255, 45, 0, 0.35);
+}
+body.theme-flaming-hot .guardian.is-recording .guardian-glow {
+  background: radial-gradient(circle, rgba(255, 45, 0, 0.40) 0%, rgba(255, 45, 0, 0) 68%);
+}
+body.theme-flaming-hot .guardian.is-recording .guardian-img {
+  filter: drop-shadow(0 0 16px rgba(255, 45, 0, 0.50));
+}
+
+/* ---- bottom bar ---- */
+body.theme-flaming-hot .app-bottom {
+  background: linear-gradient(180deg, rgba(255, 138, 61, 0) 0%, rgba(18, 10, 6, 0.6) 100%);
+}
+
+/* ---- notification button (hot red) ---- */
+body.theme-flaming-hot .notif-alert-btn {
+  background: var(--ember);
+}
+
+/* ---- timer (bright orange) ---- */
+body.theme-flaming-hot #timer {
+  color: var(--brass-bright);
+}
+
+/* ---- status text heading (warm tint) ---- */
+body.theme-flaming-hot .listening-status-text h2 {
+  color: #f5e8d8;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.theme-flaming-hot .app-bottom { animation: none !important; opacity: 1 !important; transform: none !important; }
+}

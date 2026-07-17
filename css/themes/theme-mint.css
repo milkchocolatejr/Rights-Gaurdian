@@ -1,0 +1,196 @@
+/* ============================================================
+   Rights Guardian — "Mint" theme  (fresh cool light)
+
+   Clean, crisp light theme. Cool white backgrounds, bright
+   mint-green accents, teal secondary — like fresh spearmint.
+
+   Activates via:  <body class="theme-mint">
+   ============================================================ */
+
+body.theme-mint {
+  --ink-900: #f5faf8;
+  --ink-800: #e8f2ee;
+  --ink-700: #daeae4;
+  --panel:   #ffffff;
+  --line:    #b8d0c8;
+
+  --brass:        #28a87a;
+  --brass-bright: #1c7a5a;
+  --brass-dim:    rgba(40, 168, 122, 0.10);
+
+  --parchment: #1a2a24;
+  --muted:     #5a7a70;
+
+  --ember:      #d4625a;
+  --ember-soft: rgba(212, 98, 90, 0.14);
+
+  --text-body: var(--parchment);
+  --bg-page: var(--ink-900);
+  --bg-page-image: none;
+
+  --bg-breathing:         rgba(40, 168, 122, 0.04);
+  --circle-bg-outer:      rgba(40, 168, 122, 0.08);
+  --circle-border-outer:  rgba(40, 168, 122, 0.28);
+  --circle-bg-inner:      rgba(40, 168, 122, 0.14);
+  --circle-border-inner:  var(--brass);
+  --bg-status-text:       rgba(0, 0, 0, 0.02);
+  --bg-waveform:          rgba(0, 0, 0, 0.02);
+  --bg-transcript:        rgba(0, 0, 0, 0.02);
+  --bg-notifications:     transparent;
+  --bg-notification-item: #ffffff;
+  --bg-notif-btn:         var(--brass);
+  --bg-notif-badge:       var(--ember);
+  --section-border:       1px solid var(--line);
+}
+
+body.theme-mint.listening-page,
+body.theme-mint.rg-body {
+  background: linear-gradient(180deg, #f5faf8 0%, #e8f2ee 100%);
+}
+
+/* ---- index page ---- */
+body.theme-mint .app-title {
+  color: #1a2a24;
+}
+body.theme-mint .app-title .amp {
+  color: var(--brass);
+}
+body.theme-mint .app-eyebrow {
+  color: var(--brass);
+  opacity: 0.7;
+}
+body.theme-mint .subtitle {
+  color: #3a5a4e;
+}
+
+/* ---- guardian ---- */
+body.theme-mint .guardian::before {
+  background: radial-gradient(circle at 50% 38%, #daeae4 0%, #c8ddd4 78%);
+  border: 1px solid rgba(40, 168, 122, 0.25);
+  box-shadow: inset 0 1px 14px rgba(0, 0, 0, 0.06), 0 6px 30px rgba(0, 0, 0, 0.04);
+}
+body.theme-mint .guardian-ring {
+  border-color: rgba(40, 168, 122, 0.30);
+}
+body.theme-mint .guardian-glow {
+  background: radial-gradient(circle, rgba(40, 168, 122, 0.18) 0%, rgba(40, 168, 122, 0) 68%);
+}
+body.theme-mint .guardian-img {
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.06));
+}
+body.theme-mint .guardian.is-recording .guardian-ring {
+  border-color: var(--ember);
+  box-shadow: 0 0 12px rgba(212, 98, 90, 0.20);
+}
+body.theme-mint .guardian.is-recording .guardian-glow {
+  background: radial-gradient(circle, rgba(212, 98, 90, 0.25) 0%, rgba(212, 98, 90, 0) 68%);
+}
+body.theme-mint .guardian.is-recording .guardian-img {
+  filter: drop-shadow(0 0 12px rgba(212, 98, 90, 0.28));
+}
+
+/* ---- listening page ---- */
+body.theme-mint .listening-breathing .circle-outer {
+  box-shadow: 0 0 34px rgba(40, 168, 122, 0.08), inset 0 0 22px rgba(40, 168, 122, 0.04);
+}
+body.theme-mint .listening-breathing .circle-inner {
+  box-shadow: 0 0 18px rgba(40, 168, 122, 0.10);
+}
+body.theme-mint .listening-status-text h2 {
+  color: var(--parchment);
+}
+body.theme-mint #timer {
+  color: var(--brass);
+}
+body.theme-mint .listening-status-text .text-muted {
+  color: var(--muted);
+}
+body.theme-mint .notification-title {
+  color: var(--brass);
+}
+body.theme-mint .notification-text {
+  color: var(--parchment);
+}
+
+/* ---- chrome ---- */
+body.theme-mint .app-bottom {
+  border-top: 1px solid var(--brass-dim);
+  background: linear-gradient(180deg, rgba(40, 168, 122, 0) 0%, rgba(232, 242, 238, 0.8) 100%);
+}
+body.theme-mint .bar-btn {
+  color: var(--muted);
+}
+body.theme-mint .bar-btn i {
+  color: var(--brass);
+}
+body.theme-mint .bar-btn:hover,
+body.theme-mint .bar-btn:focus-visible {
+  color: var(--parchment);
+}
+body.theme-mint .bar-btn:hover i,
+body.theme-mint .bar-btn:focus-visible i {
+  color: var(--brass-bright);
+}
+body.theme-mint .bar-btn.center {
+  color: var(--parchment);
+}
+
+/* ---- modals ---- */
+body.theme-mint .modal-content.rg-modal {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  color: var(--parchment);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.06);
+}
+body.theme-mint .rg-modal .modal-header,
+body.theme-mint .rg-modal .modal-footer {
+  border-color: var(--line);
+}
+body.theme-mint .rg-modal .modal-title {
+  color: var(--brass);
+}
+body.theme-mint .rg-modal .btn-close {
+  filter: none;
+  opacity: 0.45;
+}
+body.theme-mint .rg-modal .btn-close:hover {
+  opacity: 0.75;
+}
+body.theme-mint .rg-modal p {
+  color: var(--muted);
+}
+body.theme-mint .rg-modal strong {
+  color: var(--parchment);
+}
+body.theme-mint .rg-modal .form-check-label {
+  color: var(--parchment);
+}
+body.theme-mint .rg-modal .form-check-input {
+  background-color: #c0d4ca;
+  border-color: #a8c0b6;
+}
+body.theme-mint .rg-modal .form-check-input:checked {
+  background-color: var(--brass);
+  border-color: var(--brass);
+}
+body.theme-mint .rg-modal .form-check-input:focus {
+  box-shadow: 0 0 0 0.2rem var(--brass-dim);
+  border-color: var(--brass);
+}
+body.theme-mint .rg-btn-brass {
+  background: var(--brass);
+  color: #ffffff;
+}
+body.theme-mint .rg-btn-brass:hover {
+  background: #1c8a64;
+  color: #ffffff;
+}
+body.theme-mint .form-select {
+  background-color: #ffffff;
+  border-color: var(--line);
+  color: var(--parchment);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.theme-mint .app-bottom { animation: none !important; opacity: 1 !important; transform: none !important; }
+}

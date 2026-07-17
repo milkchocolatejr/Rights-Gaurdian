@@ -1,0 +1,230 @@
+/* ============================================================
+   Rights Guardian — "Light" theme  (warm cream)
+
+   A bright, clean theme with warm cream backgrounds, dark
+   charcoal text, and brass/gold accents that preserve the
+   brand identity in a light setting.
+
+   Activates via:  <body class="theme-light">
+   Load after theme-brass-ink.css so variables override :root.
+   ============================================================ */
+
+/* ---------- palette + semantic mapping ---------- */
+body.theme-light {
+  --ink-900: #fcfaf7;
+  --ink-800: #f6f3ee;
+  --ink-700: #ede8e0;
+  --panel:   #ffffff;
+  --line:    #d6cfc4;
+
+  --brass:        #a67c2e;
+  --brass-bright: #7a5a1e;
+  --brass-dim:    rgba(166, 124, 46, 0.10);
+
+  --parchment: #1a1a1a;
+  --muted:     #6b7280;
+
+  --ember:      #c62828;
+  --ember-soft: rgba(198, 40, 40, 0.14);
+
+  /* page-level (consumed by listening.css) */
+  --text-body: var(--parchment);
+  --bg-page: var(--ink-900);
+  --bg-page-image: none;
+
+  /* listening-page semantic slots */
+  --bg-breathing:         rgba(166, 124, 46, 0.04);
+  --circle-bg-outer:      rgba(166, 124, 46, 0.08);
+  --circle-border-outer:  rgba(166, 124, 46, 0.30);
+  --circle-bg-inner:      rgba(166, 124, 46, 0.14);
+  --circle-border-inner:  var(--brass);
+  --bg-status-text:       rgba(0, 0, 0, 0.02);
+  --bg-waveform:          rgba(0, 0, 0, 0.02);
+  --bg-transcript:        rgba(0, 0, 0, 0.02);
+  --bg-notifications:     transparent;
+  --bg-notification-item: #ffffff;
+  --bg-notif-btn:         var(--brass);
+  --bg-notif-badge:       var(--ember);
+  --section-border:       1px solid var(--line);
+}
+
+/* ============================================================
+   PAGE BACKGROUND
+   ============================================================ */
+body.theme-light.listening-page,
+body.theme-light.rg-body {
+  background: linear-gradient(180deg, #faf8f5 0%, #f0ece4 100%);
+}
+
+/* ============================================================
+   INDEX PAGE — title, eyebrow, subtitle
+   ============================================================ */
+body.theme-light .app-title {
+  color: #1a1a1a;
+}
+body.theme-light .app-title .amp {
+  color: var(--brass);
+}
+body.theme-light .app-eyebrow {
+  color: var(--brass);
+  opacity: 0.7;
+}
+body.theme-light .subtitle {
+  color: #4a4a4a;
+}
+
+/* ============================================================
+   GUARDIEN medallion — inner disc, ring, glow
+   ============================================================ */
+body.theme-light .guardian::before {
+  background: radial-gradient(circle at 50% 38%, #ede8e0 0%, #e0d9ce 78%);
+  border: 1px solid rgba(166, 124, 46, 0.25);
+  box-shadow: inset 0 1px 14px rgba(0, 0, 0, 0.08), 0 6px 30px rgba(0, 0, 0, 0.06);
+}
+body.theme-light .guardian-ring {
+  border-color: rgba(166, 124, 46, 0.30);
+}
+body.theme-light .guardian-glow {
+  background: radial-gradient(circle, rgba(166, 124, 46, 0.20) 0%, rgba(166, 124, 46, 0) 68%);
+}
+body.theme-light .guardian-img {
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.08));
+}
+
+/* ----- guardian recording state ----- */
+body.theme-light .guardian.is-recording .guardian-ring {
+  border-color: var(--ember);
+  box-shadow: 0 0 12px rgba(198, 40, 40, 0.20);
+}
+body.theme-light .guardian.is-recording .guardian-glow {
+  background: radial-gradient(circle, rgba(198, 40, 40, 0.25) 0%, rgba(198, 40, 40, 0) 68%);
+}
+body.theme-light .guardian.is-recording .guardian-img {
+  filter: drop-shadow(0 0 12px rgba(198, 40, 40, 0.30));
+}
+
+/* ============================================================
+   LISTENING PAGE — breathing circles, sections
+   ============================================================ */
+body.theme-light .listening-breathing .circle-outer {
+  box-shadow: 0 0 34px rgba(166, 124, 46, 0.08), inset 0 0 22px rgba(166, 124, 46, 0.04);
+}
+body.theme-light .listening-breathing .circle-inner {
+  box-shadow: 0 0 18px rgba(166, 124, 46, 0.10);
+}
+
+body.theme-light .listening-status-text h2 {
+  color: var(--parchment);
+}
+body.theme-light #timer {
+  color: var(--brass);
+}
+body.theme-light .listening-status-text .text-muted {
+  color: var(--muted);
+}
+body.theme-light .notification-title {
+  color: var(--brass);
+}
+body.theme-light .notification-text {
+  color: var(--parchment);
+}
+
+/* ============================================================
+   SHARED CHROME — bottom bar + modals
+   Brass-ink's versions have hardcoded dark-background values
+   so we override them here for a light background.
+   ============================================================ */
+
+/* ----- bottom bar ----- */
+body.theme-light .app-bottom {
+  border-top: 1px solid var(--brass-dim);
+  background: linear-gradient(180deg, rgba(166, 124, 46, 0) 0%, rgba(240, 236, 228, 0.8) 100%);
+}
+
+body.theme-light .bar-btn {
+  color: var(--muted);
+}
+body.theme-light .bar-btn i {
+  color: var(--brass);
+}
+body.theme-light .bar-btn:hover,
+body.theme-light .bar-btn:focus-visible {
+  color: var(--parchment);
+}
+body.theme-light .bar-btn:hover i,
+body.theme-light .bar-btn:focus-visible i {
+  color: var(--brass-bright);
+}
+body.theme-light .bar-btn.center {
+  color: var(--parchment);
+}
+
+/* ----- modals ----- */
+body.theme-light .modal-content.rg-modal {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  color: var(--parchment);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.08);
+}
+
+body.theme-light .rg-modal .modal-header,
+body.theme-light .rg-modal .modal-footer {
+  border-color: var(--line);
+}
+
+body.theme-light .rg-modal .modal-title {
+  color: var(--brass);
+}
+
+body.theme-light .rg-modal .btn-close {
+  filter: none;
+  opacity: 0.5;
+}
+body.theme-light .rg-modal .btn-close:hover {
+  opacity: 0.8;
+}
+
+body.theme-light .rg-modal p {
+  color: var(--muted);
+}
+body.theme-light .rg-modal strong {
+  color: var(--parchment);
+}
+body.theme-light .rg-modal .form-check-label {
+  color: var(--parchment);
+}
+body.theme-light .rg-modal .form-check-input {
+  background-color: #d6cfc4;
+  border-color: #c0b8ab;
+}
+body.theme-light .rg-modal .form-check-input:checked {
+  background-color: var(--brass);
+  border-color: var(--brass);
+}
+body.theme-light .rg-modal .form-check-input:focus {
+  box-shadow: 0 0 0 0.2rem var(--brass-dim);
+  border-color: var(--brass);
+}
+
+body.theme-light .rg-btn-brass {
+  background: var(--brass);
+  color: #ffffff;
+}
+body.theme-light .rg-btn-brass:hover {
+  background: #8a6630;
+  color: #ffffff;
+}
+
+/* ----- form elements in modals / settings ----- */
+body.theme-light .form-select {
+  background-color: #ffffff;
+  border-color: var(--line);
+  color: var(--parchment);
+}
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  body.theme-light .app-bottom { animation: none !important; opacity: 1 !important; transform: none !important; }
+}
